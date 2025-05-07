@@ -1,7 +1,20 @@
-.env
+# ETH Enugu - Backend
 
-NODE_ENV=development
-PORT=3000
-DATABASE_URL=mongodb://localhost:27017/yourdatabase
-JWT_SECRET=your_secret_key
-JWT_EXPIRES_IN=90d
+```shell
+# Env template
+
+DATABASE_URL="postgresql://host:pwd@url/ethenugu"
+PORT="3000"
+NODE_ENV="dev"
+
+```
+
+<br>
+
+### Tools
+
+- NodeJS
+- Express
+- Prisma
+- PostgreSQL
+- Typescript
