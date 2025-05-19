@@ -9,11 +9,8 @@
     "strict": true,
     "skipLibCheck": true,
     "moduleResolution": "node",
+    "noUnusedLocals": true
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
