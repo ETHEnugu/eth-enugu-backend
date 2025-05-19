@@ -3,7 +3,6 @@ import {
   popupCitySchema,
   getRegistrationSchema,
   filterRegistrationsSchema,
-  updateStatusSchema,
 } from "./popcity.schema";
 import {
   createPopupRegistrationRepository,
@@ -11,7 +10,6 @@ import {
   getPopupRegistrationByEmailRepository,
   getPopupRegistrationByIdRepository,
   getPaginatedPopupRegistrationsRepository,
-  updatePopupRegistrationStatusRepository,
 } from "./popcity.utils";
 import { Controller } from "../../types/index.types";
 import { z } from "zod";
@@ -108,53 +106,6 @@ export const getPopupRegistration = async (
     res.status(500).json({
       success: false,
       message: "Failed to retrieve Pop-Up City registration",
-    });
-  }
-};
-
-/**
- * Update registration status
- */
-export const updatePopupRegistrationStatus = async (
-  req: Request,
-  res: Response
-): Controller => {
-  try {
-    const { id, status } = updateStatusSchema.parse(req.body);
-
-    const existingRegistration = await getPopupRegistrationByIdRepository(id);
-
-    if (!existingRegistration) {
-      return res.status(404).json({
-        success: false,
-        message: "Registration not found",
-      });
-    }
-
-    const updatedRegistration = await updatePopupRegistrationStatusRepository(
-      id,
-      status
-    );
-
-    return res.status(200).json({
-      success: true,
-      message: `Registration status updated to ${status}`,
-      data: updatedRegistration,
-    });
-  } catch (error) {
-    logger.error("Failed to update popup registration status:", error);
-
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid request data",
-        error: error.errors,
-      });
-    }
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to update Pop-Up City registration status",
     });
   }
 };

@@ -3,7 +3,6 @@ import {
   getPopupRegistration,
   getAllPopupRegistrations,
   createPopupRegistration,
-  updatePopupRegistrationStatus,
   deletePopupRegistration,
 } from "./popcity.controller";
 
@@ -17,7 +16,7 @@ popupCityRouter.get("/popup/:id", getPopupRegistration);
 popupCityRouter.get("/popup", getAllPopupRegistrations);
 
 // Admin-only routes
-popupCityRouter.patch("/popup/status", updatePopupRegistrationStatus);
+
 popupCityRouter.delete("/popup/:id", deletePopupRegistration);
 
 export default popupCityRouter;

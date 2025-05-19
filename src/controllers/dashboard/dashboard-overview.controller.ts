@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { prisma } from "../../app";
+import { prisma } from "../../utils/prisma.utils";
 
 export const dashboardOverview: RequestHandler = async (req, res, next) => {
   try {

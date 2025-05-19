@@ -3,10 +3,11 @@ import {
   errorHandler,
   notFoundHandler,
 } from "./middlewares/error-handler.middleware";
-import routes from "./routes";
+import router from "./modules/routes";
 import { corsMiddleware } from "./middlewares/cors.middleware";
 import helmet from "helmet";
 import morgan from "morgan";
+
 const app: Express = express();
 
 // Middleware
@@ -17,10 +18,7 @@ app.use(morgan("combined"));
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use("/api", routes);
-app.get("/", (_, res) => {
-  res.json({ status: "ok" });
-});
+app.use(router);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

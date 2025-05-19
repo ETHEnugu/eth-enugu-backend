@@ -54,11 +54,7 @@ enum VolunteerOption {
    MAYBE
 }
 
-enum JoinCommunityOption {
-   YES
-   NO
-   ALREADY_MEMBER
-}
+
 
 enum RegistrationStatus {
    PENDING
