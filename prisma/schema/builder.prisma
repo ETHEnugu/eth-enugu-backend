@@ -36,12 +36,7 @@ model Builder {
   @@index([status])
 }
 
-enum Gender {
-  MALE
-  FEMALE
-  OTHER
-  PREFER_NOT_TO_SAY  
-}
+
 
 enum PrimaryRole {
   DEVELOPER
@@ -49,10 +44,4 @@ enum PrimaryRole {
   FOUNDER
   RESEARCHER
   OTHER
-}
-
-enum ApplicationStatus {
-  PENDING
-  APPROVED
-  REJECTED
 }

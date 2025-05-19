@@ -61,13 +61,3 @@ export async function createPopupRegistrationRepository(
   });
   return registration;
 }
-
-export async function updatePopupRegistrationStatusRepository(
-  id: string,
-  status: string
-) {
-  return await prisma.popupCity.update({
-    where: { id },
-    data: { status },
-  });
-}
