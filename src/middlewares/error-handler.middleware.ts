@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { isDevMode } from "../config";
 
 export class ApiError extends Error {
   statusCode: number;
@@ -38,17 +37,12 @@ export const errorHandler = (
   const isOperational = err instanceof ApiError ? err.isOperational : false;
 
   // Different response structure based on environment
-  const responseBody = isDevMode
-    ? {
-        status: "error",
-        message,
-        stack: err.stack,
-        isOperational,
-      }
-    : {
-        status: "error",
-        message: isOperational ? message : "Internal server error",
-      };
+  const responseBody = {
+    status: "error",
+    message,
+    stack: err.stack,
+    isOperational,
+  };
 
   res.status(statusCode).json(responseBody);
 };
