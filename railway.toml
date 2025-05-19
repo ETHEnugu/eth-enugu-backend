@@ -1,2 +1,2 @@
 [build]
-buildCommand = "yarn install"
+buildCommand = "npm install"
