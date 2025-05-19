@@ -3,7 +3,7 @@ import {
   errorHandler,
   notFoundHandler,
 } from "./middlewares/error-handler.middleware";
-import router from "./modules/routes";
+import router from "./modules/index.routes";
 import { corsMiddleware } from "./middlewares/cors.middleware";
 import helmet from "helmet";
 import morgan from "morgan";

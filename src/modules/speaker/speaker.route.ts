@@ -8,10 +8,10 @@ import {
 const speakerRouter = Router();
 
 // Public routes
-speakerRouter.post("/speaker", createSpeakerApplication);
+speakerRouter.post("/", createSpeakerApplication);
 
 // Protected routes (require authentication)
-speakerRouter.get("/speaker/:id", getSpeakerApplication);
-speakerRouter.get("/speaker", getAllSpeakerApplications);
+speakerRouter.get("/:id", getSpeakerApplication);
+speakerRouter.get("/", getAllSpeakerApplications);
 
 export default speakerRouter;

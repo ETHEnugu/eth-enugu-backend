@@ -9,14 +9,14 @@ import {
 const popupCityRouter = Router();
 
 // Public routes
-popupCityRouter.post("/popup", createPopupRegistration);
+popupCityRouter.post("/", createPopupRegistration);
 
 // Protected routes (require authentication)
-popupCityRouter.get("/popup/:id", getPopupRegistration);
-popupCityRouter.get("/popup", getAllPopupRegistrations);
+popupCityRouter.get("/:id", getPopupRegistration);
+popupCityRouter.get("/", getAllPopupRegistrations);
 
 // Admin-only routes
 
-popupCityRouter.delete("/popup/:id", deletePopupRegistration);
+popupCityRouter.delete("/:id", deletePopupRegistration);
 
 export default popupCityRouter;
