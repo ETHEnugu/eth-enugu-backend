@@ -8,11 +8,11 @@ import {
 
 const builderResidencyRouter = Router();
 
-builderResidencyRouter.post("/builder", createBuilderResidency);
+builderResidencyRouter.post("/", createBuilderResidency);
 
-builderResidencyRouter.get("/builder/:id", getResidency);
-builderResidencyRouter.get("/builder", getAllResidencies);
+builderResidencyRouter.get("/:id", getResidency);
+builderResidencyRouter.get("/", getAllResidencies);
 
-builderResidencyRouter.delete("/builder/:id", deleteResidency);
+builderResidencyRouter.delete("/:id", deleteResidency);
 
 export default builderResidencyRouter;

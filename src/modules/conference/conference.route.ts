@@ -9,22 +9,14 @@ import {
 const conferenceSummitRouter = Router();
 
 // Public routes
-conferenceSummitRouter.post("/conference", createConferenceRegistration);
+conferenceSummitRouter.post("/", createConferenceRegistration);
 
 // Protected routes (require authentication)
-conferenceSummitRouter.get(
-  "/conference/:id",
-
-  getConferenceRegistration
-);
-conferenceSummitRouter.get(
-  "/conference",
-
-  getAllConferenceRegistrations
-);
+conferenceSummitRouter.get("/:id", getConferenceRegistration);
+conferenceSummitRouter.get("/", getAllConferenceRegistrations);
 
 // Admin-only routes
 
-conferenceSummitRouter.delete("/conference/:id", deleteConferenceRegistration);
+conferenceSummitRouter.delete("/:id", deleteConferenceRegistration);
 
 export default conferenceSummitRouter;
