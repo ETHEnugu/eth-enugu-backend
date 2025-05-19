@@ -3,7 +3,6 @@ import {
   speakerApplicationSchema,
   getApplicationSchema,
   filterApplicationsSchema,
-  updateStatusSchema,
 } from "./speaker.schema";
 import {
   createSpeakerApplicationRepository,
