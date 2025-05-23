@@ -1,31 +1,39 @@
 {
-  "name": "eth-enugu-backend",
-  "packageManager": "yarn@4.7.0",
-  "scripts": {
-    "build": "tsc",
-    "start": "node dist/app.js",
-    "dev": "nodemon --exec ts-node src/app.ts",
-    "lint": "eslint . --ext .ts"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "helmet": "^8.1.0"
-  },
-  "devDependencies": {
-    "@prisma/client": "^6.7.0",
-    "@types/cors": "^2.8.17",
-    "@types/dotenv": "^8.2.3",
-    "@types/express": "^5.0.1",
-    "@types/helmet": "^4.0.0",
-    "@types/node": "^22.15.3",
-    "@typescript-eslint/eslint-plugin": "^8.32.0",
-    "@typescript-eslint/parser": "^8.32.0",
-    "eslint": "^9.26.0",
-    "nodemon": "^3.1.10",
-    "prisma": "^6.7.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
-  }
+   "name": "eth-enugu-backend",
+   "scripts": {
+      "dev": "nodemon --exec ts-node src/server.ts",
+      "start": "ts-node src/server.ts",
+      "build": "tsc",
+      "lint": "eslint . --ext .ts",
+      "generate": "npx prisma generate",
+      "migrate": "npx prisma migrate dev"
+   },
+   "prisma": {
+      "schema": "./prisma/schema"
+   },
+   "dependencies": {
+      "cors": "^2.8.5",
+      "dotenv": "^16.5.0",
+      "express": "^5.1.0",
+      "helmet": "^8.1.0",
+      "morgan": "^1.10.0",
+      "pino": "^9.6.0",
+      "zod": "^3.24.4"
+   },
+   "devDependencies": {
+      "@prisma/client": "^6.7.0",
+      "@types/cors": "^2.8.17",
+      "@types/dotenv": "^8.2.3",
+      "@types/express": "^5.0.1",
+      "@types/helmet": "^4.0.0",
+      "@types/morgan": "^1.9.9",
+      "@types/node": "^22.15.3",
+      "@typescript-eslint/eslint-plugin": "^8.32.0",
+      "@typescript-eslint/parser": "^8.32.0",
+      "eslint": "^9.26.0",
+      "nodemon": "^3.1.10",
+      "prisma": "^6.7.0",
+      "ts-node": "^10.9.2",
+      "typescript": "^5.8.3"
+   }
 }

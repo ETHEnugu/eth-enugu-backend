@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -19,4 +20,23 @@ model Attendee {
   lastName    String
   email       String  @unique
   phoneNumber String? @unique
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY  
+}
+
+enum ApplicationStatus {
+   PENDING
+   APPROVED
+   REJECTED
+}
+
+enum JoinCommunityOption {
+   YES
+   NO
+   ALREADY_MEMBER
 }
