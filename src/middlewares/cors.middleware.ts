@@ -1,8 +1,9 @@
 import cors from "cors";
-import { appConfig } from "../config";
+// import { appConfig } from "../config";
 
 export const corsMiddleware = () =>
-  cors({
-    origin: appConfig.allowedOrigins,
-    credentials: true,
-  });
+   cors({
+      // origin: appConfig.allowedOrigins,
+      origin: "*",
+      credentials: true,
+   });
