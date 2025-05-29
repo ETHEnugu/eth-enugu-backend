@@ -32,6 +32,8 @@ export const AttendanceTypeEnum = z.enum([
   "EXHIBITOR",
 ]);
 
+export const BooleanEnum = z.enum(["YES", "NO"]);
+
 export const JoinCommunityOptionEnum = z.enum(["YES", "NO", "ALREADY_MEMBER"]);
 
 export const RegistrationStatusEnum = z.enum([
@@ -54,7 +56,7 @@ export const conferenceSummitSchema = z.object({
   roleDescription: RoleDescriptionEnum,
   expectedGains: z.string().optional().nullable(),
   attendanceType: AttendanceTypeEnum,
-  certificateNeeded: z.boolean(),
+  certificateNeeded: BooleanEnum,
 
   // Additional Information (Page 2)
   dietaryAccessibilityNeeds: z.string().optional().nullable(),

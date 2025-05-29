@@ -14,29 +14,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Attendee {
-  id          String  @id @default(uuid())
-  firstName   String
-  lastName    String
-  email       String  @unique
-  phoneNumber String? @unique
-}
-
 enum Gender {
   MALE
   FEMALE
   OTHER
-  PREFER_NOT_TO_SAY  
+  PREFER_NOT_TO_SAY
+}
+
+enum StringBoolean {
+  YES
+  NO
 }
 
 enum ApplicationStatus {
-   PENDING
-   APPROVED
-   REJECTED
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum JoinCommunityOption {
-   YES
-   NO
-   ALREADY_MEMBER
+  YES
+  NO
+  ALREADY_MEMBER
 }

@@ -1,35 +1,33 @@
 model ConferenceSummit {
-   id                      String    @id @default(cuid())
-   createdAt               DateTime  @default(now())
-   updatedAt               DateTime  @updatedAt
-   
+   id        String   @id @default(cuid())
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+
    // Personal Information (Page 1)
-   fullName                String
-   email                   String    @unique
-   whatsappNumber          String
-   location                String
-   age                     AgeRange
-   gender                  Gender
-   
+   fullName       String
+   email          String   @unique
+   whatsappNumber String
+   location       String
+   age            AgeRange
+   gender         Gender
+
    // Conference Information (Page 2)
-   roleDescription         RoleDescription
-   expectedGains           String?   @db.Text
-   attendanceType          AttendanceType
-   certificateNeeded       Boolean
-   
+   roleDescription   RoleDescription
+   expectedGains     String?         @db.Text
+   attendanceType    AttendanceType
+   certificateNeeded StringBoolean
+
    // Additional Information (Page 2)
-   dietaryAccessibilityNeeds String?  @db.Text
-   referralSource          String    @db.Text
-   joinOnlineCommunity     JoinCommunityOption
-   
+   dietaryAccessibilityNeeds String?             @db.Text
+   referralSource            String              @db.Text
+   joinOnlineCommunity       JoinCommunityOption
+
    // Status field
-   status                  RegistrationStatus @default(PENDING)
-   
+   status RegistrationStatus @default(PENDING)
+
    @@index([email])
    @@index([status])
 }
-
-
 
 enum AgeRange {
    AGE_16_19
