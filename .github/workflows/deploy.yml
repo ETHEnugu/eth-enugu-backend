@@ -13,18 +13,33 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up SSH
+      - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.VPS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ vars.VPS_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to VPS
+      - name: Deploy to Hostinger VPS
+        env:
+          SSH_USER: ${{ vars.VPS_USER }}
+          SSH_HOST: ${{ vars.VPS_HOST }}
         run: |
-          ssh ${{ vars.VPS_USER }}@${{ vars.VPS_HOST }} << 'EOF'
-            cd /ethenugu/landing-page-api
+          ssh $SSH_USER@$SSH_HOST bash -s << 'EOF'
+            set -e  # stop on errors
+
+            echo "🚀 Connected to server"
+            cd /ethenugu/landing-page-api || exit 1
+
+            echo "📥 Pulling latest code..."
             git pull
-            npm install
+
+            echo "📦 Installing dependencies..."
+            npm ci --omit=dev
+
+            echo "♻️ Restarting app with PM2..."
+            command -v pm2 >/dev/null 2>&1 || export PATH=$HOME/.npm-global/bin:$PATH
             pm2 restart ethenugu-landing-page-api || pm2 start npm --name ethenugu-landing-page-api -- start
+
+            echo "✅ Done!"
           EOF
