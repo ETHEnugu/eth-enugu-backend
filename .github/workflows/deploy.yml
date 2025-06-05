@@ -8,10 +8,16 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+
+      - name: Debug values
+        run: |
+          echo "VPS_HOST is ${{ vars.VPS_HOST }}"
+          echo "VPS_DEPLOY_KEY is ${{ secrets.VPS_DEPLOY_KEY }}"
 
       - name: Set up SSH key
         run: |
@@ -25,21 +31,36 @@ jobs:
           SSH_USER: ${{ vars.VPS_USER }}
           SSH_HOST: ${{ vars.VPS_HOST }}
         run: |
-          ssh $SSH_USER@$SSH_HOST bash -s << 'EOF'
-            set -e  # stop on errors
+          SSH_KEY_PATH=~/.ssh/id_ed25519 # This key is for connecting FROM GitHub Actions TO your VPS
+          ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST bash -s << 'EOF'
+            set -e
+
+            PROJECT_PATH="~/ethenugu/landing-page-api"
+            # Since the repo is public, use the HTTPS URL
+            REPO_URL="https://github.com/ETHEnugu/eth-enugu-backend.git" # <--- Use the actual URL for your public repo!
 
             echo "🚀 Connected to server"
-            cd /ethenugu/landing-page-api || exit 1
 
-            echo "📥 Pulling latest code..."
-            git pull
+            if [ ! -d "$PROJECT_PATH/.git" ]; then
+              echo "No existing Git repository found at $PROJECT_PATH. Cloning fresh..."
+              mkdir -p $(dirname "$PROJECT_PATH") # Ensure parent directory exists for cloning
+              git clone "$REPO_URL" "$PROJECT_PATH" || { echo "Error: Failed to clone repository!"; exit 1; }
+              cd "$PROJECT_PATH"
+              echo "✅ Repository cloned."
+            else
+              echo "Existing Git repository found at $PROJECT_PATH."
+              cd "$PROJECT_PATH" || { echo "Error: Directory $PROJECT_PATH not found or accessible!"; exit 1; }
+              echo "📥 Pulling latest code..."
+              git pull || { echo "Error: Failed to pull latest code!"; exit 1; }
+              echo "✅ Code pulled."
+            fi
 
             echo "📦 Installing dependencies..."
-            npm ci --omit=dev
+            npm ci --omit=dev || { echo "Error: Failed to install dependencies!"; exit 1; }
 
             echo "♻️ Restarting app with PM2..."
             command -v pm2 >/dev/null 2>&1 || export PATH=$HOME/.npm-global/bin:$PATH
-            pm2 restart ethenugu-landing-page-api || pm2 start npm --name ethenugu-landing-page-api -- start
+            pm2 restart ethenugu-landing-page-api || pm2 start npm --name ethenugu-landing-page-api -- start || { echo "Error: Failed to restart/start PM2 process!"; exit 1; }
 
-            echo "✅ Done!"
+            echo "✅ Deployment Done!"
           EOF
