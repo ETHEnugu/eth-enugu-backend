@@ -1,11 +1,12 @@
-import * as nodemailer from 'nodemailer';
-import Mail, { Attachment } from 'nodemailer/lib/mailer';
-import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import * as nodemailer from "nodemailer";
+import Mail, { Attachment } from "nodemailer/lib/mailer";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 export interface ISendMailOptions {
   to: string;
   subject: string;
-  text: string;
+  text?: string;
+  html?: string;
   attachments?: Attachment[];
 }
 
@@ -13,6 +14,7 @@ export const SendMail = async ({
   to,
   subject,
   text,
+  html,
   attachments,
 }: ISendMailOptions) => {
   const { MAIL_USERNAME, MAIL_PASSWORD, MAIL_HOST } = process.env;
@@ -25,12 +27,13 @@ export const SendMail = async ({
       user: MAIL_USERNAME,
       pass: MAIL_PASSWORD,
     },
-  } as SMTPTransport['options']);
+  } as SMTPTransport["options"]);
 
-  const mailOptions: Mail['options'] = {
+  const mailOptions: Mail["options"] = {
     from: MAIL_USERNAME,
     to,
     subject,
+    html,
     text,
     attachments,
   };
@@ -40,7 +43,7 @@ export const SendMail = async ({
     await transporter.sendMail(mailOptions);
     return true;
   } catch (error) {
-    console.error('❌ Failed to send email:', error);
+    console.error("❌ Failed to send email:", error);
     return false;
   }
 };

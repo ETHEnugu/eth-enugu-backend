@@ -53,7 +53,7 @@ export const createConferenceRegistration = async (
     SendMail({
       to: newRegistration.email,
       subject: "Registeration Complete!",
-      text: thankYouForRegistering(newRegistration.fullName?.split(" ")[0]),
+      html: thankYouForRegistering(newRegistration.fullName?.split(" ")[0]),
     });
 
     return res.status(201).json(response);
