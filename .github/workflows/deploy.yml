@@ -1,4 +1,32 @@
-- name: Deploy to Hostinger VPS
+name: Deploy to Hostinger VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Debug values
+        run: |
+          echo "VPS_HOST is ${{ vars.VPS_HOST }}"
+          echo "VPS_DEPLOY_KEY is ${{ secrets.VPS_DEPLOY_KEY }}"
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ vars.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Hostinger VPS
         env:
           SSH_USER: ${{ vars.VPS_USER }}
           SSH_HOST: ${{ vars.VPS_HOST }}
@@ -8,19 +36,19 @@
             set -e
 
             # --- START DEBUGGING LINES ---
-            echo "DEBUG: Script executing as user: $(whoami)"
-            echo "DEBUG: HOME environment variable: $HOME"
-            echo "DEBUG: PATH before modification: $PATH"
-            echo "DEBUG: Attempting to explicitly add npm path:"
+            echo "Script executing as user: $(whoami)"
+            echo "HOME environment variable: $HOME"
+            echo "PATH before modification: $PATH"
+            echo "Attempting to explicitly add npm path:"
             # Original path you provided
             # If the user is 'root', this path is correct.
             # If the user is NOT 'root', but 'npm' is for 'root', this still works.
             # If npm was installed via nvm for the specific SSH_USER, it would be "$HOME/.nvm/versions/node/v22.13.1/bin:$PATH"
             export PATH="/root/.nvm/versions/node/v22.13.1/bin:$PATH" 
-            echo "DEBUG: PATH after modification: $PATH"
-            echo "DEBUG: Verifying npm executable presence:"
+            echo "PATH after modification: $PATH"
+            echo "Verifying npm executable presence:"
             ls -l "/root/.nvm/versions/node/v22.13.1/bin/npm" # Check if the file exists and its permissions
-            echo "DEBUG: Trying 'which npm' after PATH modification:"
+            echo "Trying 'which npm' after PATH modification:"
             which npm
             echo "--- END DEBUGGING LINES ---"
 
