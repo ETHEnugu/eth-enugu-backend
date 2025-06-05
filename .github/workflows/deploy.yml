@@ -8,60 +8,50 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: production
+    environment: production # Ensures access to environment-specific secrets/variables
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Debug values
-        run: |
-          echo "VPS_HOST is ${{ vars.VPS_HOST }}"
-          echo "VPS_DEPLOY_KEY is ${{ secrets.VPS_DEPLOY_KEY }}"
+      - name: Checkout repository
+        uses: actions/checkout@v4 # Clones your repository into the runner
 
       - name: Set up SSH key
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.VPS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ vars.VPS_HOST }} >> ~/.ssh/known_hosts
+          mkdir -p ~/.ssh # Ensures the .ssh directory exists
+          echo "${{ secrets.VPS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519 # Writes your private SSH key
+          chmod 600 ~/.ssh/id_ed25519 # Sets restrictive permissions (crucial for SSH)
+          ssh-keyscan -H ${{ vars.VPS_HOST }} >> ~/.ssh/known_hosts # Adds the VPS host to known_hosts
 
       - name: Deploy to Hostinger VPS
         env:
-          SSH_USER: ${{ vars.VPS_USER }}
-          SSH_HOST: ${{ vars.VPS_HOST }}
+          SSH_USER: ${{ vars.VPS_USER }} # User for SSH connection
+          SSH_HOST: ${{ vars.VPS_HOST }} # Hostname or IP for SSH connection
         run: |
+          set -e # Exit immediately if a command exits with a non-zero status
+
+          # Define the path to the SSH key used by GitHub Actions to connect to your VPS
           SSH_KEY_PATH=~/.ssh/id_ed25519
-          ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST bash -s << 'EOF'
-            set -e
 
-            # --- START DEBUGGING LINES ---
-            echo "Script executing as user: $(whoami)"
-            echo "HOME environment variable: $HOME"
-            echo "PATH before modification: $PATH"
-            echo "Attempting to explicitly add npm path:"
-            # Original path you provided
-            # If the user is 'root', this path is correct.
-            # If the user is NOT 'root', but 'npm' is for 'root', this still works.
-            # If npm was installed via nvm for the specific SSH_USER, it would be "$HOME/.nvm/versions/node/v22.13.1/bin:$PATH"
+          # Use ssh to execute commands on the remote VPS
+          ssh -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no "$SSH_USER"@"$SSH_HOST" bash -s << 'EOF'
+            set -e # Ensure script execution on VPS stops on first error
+
+            # Explicitly add the nvm bin path to the PATH for this session
+            # This ensures 'npm' is found regardless of the default shell configuration
             export PATH="/root/.nvm/versions/node/v22.13.1/bin:$PATH" 
-            echo "PATH after modification: $PATH"
-            echo "Verifying npm executable presence:"
-            ls -l "/root/.nvm/versions/node/v22.13.1/bin/npm" # Check if the file exists and its permissions
-            echo "Trying 'which npm' after PATH modification:"
-            which npm
-            echo "--- END DEBUGGING LINES ---"
-
-            PROJECT_PATH="./ethenugu/landing-page-api"
+            
+            PROJECT_PATH="/root/ethenugu/landing-page-api" 
             REPO_URL="https://github.com/ETHEnugu/eth-enugu-backend.git" 
 
             echo "🚀 Connected to server"
 
+            # Check if the .git directory exists inside the intended project path
             if [ ! -d "$PROJECT_PATH/.git" ]; then
               echo "No existing Git repository found at $PROJECT_PATH. Cloning fresh..."
-              mkdir -p "$(dirname "$PROJECT_PATH")"
+              # Ensure the parent directory (/root/ethenugu) exists before cloning
+              mkdir -p "$(dirname "$PROJECT_PATH")" 
+              # Clone the repository directly into the PROJECT_PATH
               git clone "$REPO_URL" "$PROJECT_PATH" || { echo "Error: Failed to clone repository!"; exit 1; }
-              cd "$PROJECT_PATH"
+              cd "$PROJECT_PATH" # Navigate into the cloned repository
               echo "✅ Repository cloned."
             else
               echo "Existing Git repository found at $PROJECT_PATH."
@@ -72,10 +62,18 @@ jobs:
             fi
 
             echo "📦 Installing dependencies..."
+            # Install production dependencies (npm ci is preferred for CI/CD)
             npm ci --omit=dev || { echo "Error: Failed to install dependencies!"; exit 1; }
 
+            echo "🛠️ Building TypeScript project..."
+            # Compile TypeScript code to JavaScript using your 'build' script
+            npm run build || { echo "Error: Failed to build project!"; exit 1; }
+            echo "✅ Project built."
+
             echo "♻️ Restarting app with PM2..."
+            # Ensure PM2 is in PATH, if not, add a common global npm bin path
             command -v pm2 >/dev/null 2>&1 || export PATH=$HOME/.npm-global/bin:$PATH 
+            # Restart the PM2 process; if it doesn't exist, start it for the first time
             pm2 restart ethenugu-landing-page-api || pm2 start npm --name ethenugu-landing-page-api -- start || { echo "Error: Failed to restart/start PM2 process!"; exit 1; }
 
             echo "✅ Deployment Done!"
