@@ -1,51 +1,37 @@
-name: Deploy to Hostinger VPS
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    environment: production
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Debug values
-        run: |
-          echo "VPS_HOST is ${{ vars.VPS_HOST }}"
-          echo "VPS_DEPLOY_KEY is ${{ secrets.VPS_DEPLOY_KEY }}"
-
-      - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.VPS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ vars.VPS_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Deploy to Hostinger VPS
+- name: Deploy to Hostinger VPS
         env:
           SSH_USER: ${{ vars.VPS_USER }}
           SSH_HOST: ${{ vars.VPS_HOST }}
         run: |
-          SSH_KEY_PATH=~/.ssh/id_ed25519 # This key is for connecting FROM GitHub Actions TO your VPS
+          SSH_KEY_PATH=~/.ssh/id_ed25519
           ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST bash -s << 'EOF'
             set -e
 
-            export PATH="/root/.nvm/versions/node/v22.13.1/bin/npm:$PATH" 
+            # --- START DEBUGGING LINES ---
+            echo "DEBUG: Script executing as user: $(whoami)"
+            echo "DEBUG: HOME environment variable: $HOME"
+            echo "DEBUG: PATH before modification: $PATH"
+            echo "DEBUG: Attempting to explicitly add npm path:"
+            # Original path you provided
+            # If the user is 'root', this path is correct.
+            # If the user is NOT 'root', but 'npm' is for 'root', this still works.
+            # If npm was installed via nvm for the specific SSH_USER, it would be "$HOME/.nvm/versions/node/v22.13.1/bin:$PATH"
+            export PATH="/root/.nvm/versions/node/v22.13.1/bin:$PATH" 
+            echo "DEBUG: PATH after modification: $PATH"
+            echo "DEBUG: Verifying npm executable presence:"
+            ls -l "/root/.nvm/versions/node/v22.13.1/bin/npm" # Check if the file exists and its permissions
+            echo "DEBUG: Trying 'which npm' after PATH modification:"
+            which npm
+            echo "--- END DEBUGGING LINES ---"
 
-            PROJECT_PATH="~/ethenugu/landing-page-api"
-            # Since the repo is public, use the HTTPS URL
-            REPO_URL="https://github.com/ETHEnugu/eth-enugu-backend.git" # <--- Use the actual URL for your public repo!
+            PROJECT_PATH="/ethenugu/landing-page-api"
+            REPO_URL="https://github.com/ETHEnugu/landing-page-api.git" 
 
             echo "🚀 Connected to server"
 
             if [ ! -d "$PROJECT_PATH/.git" ]; then
               echo "No existing Git repository found at $PROJECT_PATH. Cloning fresh..."
-              mkdir -p $(dirname "$PROJECT_PATH") # Ensure parent directory exists for cloning
+              mkdir -p "$(dirname "$PROJECT_PATH")"
               git clone "$REPO_URL" "$PROJECT_PATH" || { echo "Error: Failed to clone repository!"; exit 1; }
               cd "$PROJECT_PATH"
               echo "✅ Repository cloned."
@@ -61,7 +47,7 @@ jobs:
             npm ci --omit=dev || { echo "Error: Failed to install dependencies!"; exit 1; }
 
             echo "♻️ Restarting app with PM2..."
-            command -v pm2 >/dev/null 2>&1 || export PATH=$HOME/.npm-global/bin:$PATH
+            command -v pm2 >/dev/null 2>&1 || export PATH=$HOME/.npm-global/bin:$PATH 
             pm2 restart ethenugu-landing-page-api || pm2 start npm --name ethenugu-landing-page-api -- start || { echo "Error: Failed to restart/start PM2 process!"; exit 1; }
 
             echo "✅ Deployment Done!"
