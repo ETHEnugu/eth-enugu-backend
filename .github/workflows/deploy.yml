@@ -60,15 +60,17 @@ jobs:
               git pull || { echo "Error: Failed to pull latest code!"; exit 1; }
               echo "✅ Code pulled."
             fi
-
-            echo "📦 Installing dependencies..."
-            # Install production dependencies (npm ci is preferred for CI/CD)
-            npm ci --omit=dev || { echo "Error: Failed to install dependencies!"; exit 1; }
+          
+            echo "📦 Installing ALL dependencies (including devDependencies) for build..."
+            npm ci || { echo "Error: Failed to install all dependencies!"; exit 1; } # Removed --omit=dev
 
             echo "🛠️ Building TypeScript project..."
-            # Compile TypeScript code to JavaScript using your 'build' script
             npm run build || { echo "Error: Failed to build project!"; exit 1; }
             echo "✅ Project built."
+
+            echo "🗑️ Cleaning up dev dependencies for production runtime..."
+            npm prune --production || { echo "Error: Failed to prune dev dependencies!"; exit 1; }
+            echo "✅ Dev dependencies pruned."
 
             echo "♻️ Restarting app with PM2..."
             # Ensure PM2 is in PATH, if not, add a common global npm bin path
