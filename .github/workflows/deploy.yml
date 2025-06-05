@@ -35,7 +35,7 @@ jobs:
             set -e  # stop on errors
 
             echo "🚀 Connected to server"
-            cd /ethenugu/landing-page-api || exit 1
+            cd ~/ethenugu/landing-page-api || exit 1
 
             echo "📥 Pulling latest code..."
             git pull
