@@ -14,6 +14,8 @@ import {
 import { Controller } from "../../types/index.types";
 import { z } from "zod";
 import { logger } from "../../utils/logger.utils";
+import { SendMail } from "../../utils/mail.util";
+import thankYouForRegistering from "../../template/thank-you-for-registering";
 
 /**
  * Create a new conference registration
@@ -47,6 +49,12 @@ export const createConferenceRegistration = async (
       message: "Your Conference/Summit registration was submitted successfully",
       data: newRegistration,
     };
+
+    SendMail({
+      to: newRegistration.email,
+      subject: "Registeration Complete!",
+      text: thankYouForRegistering(newRegistration.fullName?.split(" ")[0]),
+    });
 
     return res.status(201).json(response);
   } catch (error) {
