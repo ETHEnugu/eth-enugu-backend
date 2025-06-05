@@ -53,7 +53,7 @@ jobs:
             echo "--- END DEBUGGING LINES ---"
 
             PROJECT_PATH="/ethenugu/landing-page-api"
-            REPO_URL="https://github.com/ETHEnugu/landing-page-api.git" 
+            REPO_URL="https://github.com/ETHEnugu/eth-enugu-backend.git" 
 
             echo "🚀 Connected to server"
 
