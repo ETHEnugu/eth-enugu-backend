@@ -2,7 +2,7 @@
    "name": "eth-enugu-backend",
    "scripts": {
       "dev": "nodemon --exec ts-node src/server.ts",
-      "start": "ts-node src/server.ts",
+      "start": "node dist/server.js",
       "build": "tsc",
       "lint": "eslint . --ext .ts",
       "generate": "npx prisma generate",
