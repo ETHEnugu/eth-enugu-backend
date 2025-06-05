@@ -35,6 +35,8 @@ jobs:
           ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST bash -s << 'EOF'
             set -e
 
+            export PATH="/root/.nvm/versions/node/v22.13.1/bin/npm:$PATH" 
+
             PROJECT_PATH="~/ethenugu/landing-page-api"
             # Since the repo is public, use the HTTPS URL
             REPO_URL="https://github.com/ETHEnugu/eth-enugu-backend.git" # <--- Use the actual URL for your public repo!
