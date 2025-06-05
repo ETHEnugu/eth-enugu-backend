@@ -13,8 +13,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Debug host value
-        run: echo "VPS_HOST is ${{ vars.VPS_HOST }}"
+      - name: Debug values
+        run: |
+          echo "VPS_HOST is ${{ vars.VPS_HOST }}"
+          echo "VPS_DEPLOY_KEY is ${{ secrets.VPS_DEPLOY_KEY }}"
 
       - name: Set up SSH key
         run: |
