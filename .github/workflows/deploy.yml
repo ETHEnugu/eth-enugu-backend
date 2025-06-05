@@ -64,6 +64,17 @@ jobs:
             echo "📦 Installing ALL dependencies (including devDependencies) for build..."
             npm ci || { echo "Error: Failed to install all dependencies!"; exit 1; } # Removed --omit=dev
 
+            echo "⚙️ Generating Prisma Client..."
+            # Ensure Prisma Client is generated based on your schema
+            npx prisma generate || { echo "Error: Failed to generate Prisma Client!"; exit 1; }
+            echo "✅ Prisma Client generated."
+
+            echo "🗄️ Applying database migrations..."
+            # Apply pending migrations to the database (use 'deploy' for production)
+            # Ensure your DATABASE_URL environment variable is correctly set on the VPS where this script runs.
+            npx prisma migrate deploy || { echo "Error: Failed to apply database migrations!"; exit 1; }
+            echo "✅ Database migrations applied."
+
             echo "🛠️ Building TypeScript project..."
             npm run build || { echo "Error: Failed to build project!"; exit 1; }
             echo "✅ Project built."
