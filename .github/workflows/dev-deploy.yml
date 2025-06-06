@@ -41,7 +41,7 @@ jobs:
             # This ensures 'npm' is found regardless of the default shell configuration
             export PATH="/root/.nvm/versions/node/v22.13.1/bin:$PATH" 
             
-            PROJECT_PATH="/root/ethenugu/landing-page-api" 
+            PROJECT_PATH="/root/ethenugu/landing-page-api-dev" 
             REPO_URL="https://github.com/ETHEnugu/eth-enugu-backend.git" 
 
             echo "🚀 Connected to server"
@@ -89,7 +89,7 @@ jobs:
             # Ensure PM2 is in PATH, if not, add a common global npm bin path
             command -v pm2 >/dev/null 2>&1 || export PATH=$HOME/.npm-global/bin:$PATH 
             # Restart the PM2 process; if it doesn't exist, start it for the first time
-            pm2 restart ethenugu-landing-page-api || pm2 start npm --name ethenugu-landing-page-api -- start || { echo "Error: Failed to restart/start PM2 process!"; exit 1; }
+            pm2 restart ethenugu-landing-page-api-dev || pm2 start npm --name ethenugu-landing-page-api-dev -- start || { echo "Error: Failed to restart/start PM2 process!"; exit 1; }
 
             echo "✅ Deployment Done!"
           EOF
