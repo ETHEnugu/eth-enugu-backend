@@ -1,0 +1,77 @@
+name: Deploy to Hostinger VPS (Development)
+
+on:
+  push:
+    branches:
+      - development 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production 
+
+    steps:
+      - name: Checkout repository (Development Branch)
+        uses: actions/checkout@v4
+        with:
+          ref: development 
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_DEV_DEPLOY_KEY }}" > ~/.ssh/id_ed25519 
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ vars.VPS_DEV_HOST }} >> ~/.ssh/known_hosts 
+
+      - name: Deploy to Hostinger VPS (Development Server)
+        env:
+          SSH_USER: ${{ vars.VPS_DEV_USER }}
+          SSH_HOST: ${{ vars.VPS_DEV_HOST }}
+        run: |
+          set -e
+
+          export PATH="/root/.nvm/versions/node/v22.13.1/bin:$PATH" 
+          
+          PROJECT_PATH="/root/ethenugu/landing-page-api-dev" 
+          REPO_URL="https://github.com/ETHEnugu/eth-enugu-backend.git" 
+
+          echo "🚀 Connected to development server"
+
+          if [ ! -d "$PROJECT_PATH/.git" ]; then
+            echo "No existing Git repository found at $PROJECT_PATH. Cloning fresh..."
+            mkdir -p "$(dirname "$PROJECT_PATH")" 
+            git clone "$REPO_URL" "$PROJECT_PATH" || { echo "Error: Failed to clone repository!"; exit 1; }
+            cd "$PROJECT_PATH"
+            echo "✅ Repository cloned."
+          else
+            echo "Existing Git repository found at $PROJECT_PATH."
+            cd "$PROJECT_PATH" || { echo "Error: Directory "$PROJECT_PATH" not found or accessible!"; exit 1; }
+            echo "📥 Pulling latest code..."
+            git pull || { echo "Error: Failed to pull latest code!"; exit 1; }
+            echo "✅ Code pulled."
+          fi
+
+          echo "📦 Installing ALL dependencies (including devDependencies) for build and Prisma..."
+          npm ci || { echo "Error: Failed to install all dependencies!"; exit 1; } 
+
+          echo "⚙️ Generating Prisma Client..."
+          npx prisma generate || { echo "Error: Failed to generate Prisma Client!"; exit 1; }
+          echo "✅ Prisma Client generated."
+
+          echo "🗄️ Applying database migrations..."
+          npx prisma migrate deploy || { echo "Error: Failed to apply database migrations!"; exit 1; }
+          echo "✅ Database migrations applied."
+
+          echo "🛠️ Building TypeScript project..."
+          npm run build || { echo "Error: Failed to build project!"; exit 1; }
+          echo "✅ Project built."
+
+          echo "🗑️ Cleaning up dev dependencies for production runtime..."
+          npm prune --production || { echo "Error: Failed to prune dev dependencies!"; exit 1; }
+          echo "✅ Dev dependencies pruned."
+
+          echo "♻️ Restarting app with PM2..."
+          command -v pm2 >/dev/null 2>&1 || export PATH=$HOME/.npm-global/bin:$PATH 
+          pm2 restart ethenugu-landing-page-api-dev || pm2 start npm --name ethenugu-landing-page-api-dev -- start || { echo "Error: Failed to restart/start PM2 process!"; exit 1; }
+
+          echo "✅ Development Deployment Done!"
