@@ -35,7 +35,7 @@ export default function (oldfirstName: string) {
                         <p data-id="react-email-text" style="font-size:16px;line-height:1.5;margin:16px 0;margin-bottom:20px">Join the WhatsApp Announcement Channel for updates and coordination.</p>
                         <p data-id="react-email-text" style="font-size:16px;line-height:1.5;margin:16px 0;margin-bottom:20px">Next Steps 👇</p><a href="https://ethenugu.xyz/generate-dp" data-id="react-email-link" target="_blank" style="color:#067df7;text-decoration:none;font-size:16px;margin:100px 0">- 📸 Generate your DP</a><br /><a href="https://asset.ethenugu.xyz/flier.jpg" data-id="react-email-link" target="_blank" style="color:#067df7;text-decoration:none;font-size:16px;margin:100px 0">- 📩 Download the event flyer</a>
                         <p data-id="react-email-text" style="font-size:16px;line-height:1.5;margin:16px 0;margin-bottom:20px">Share your registration link and invite your friends to build with us!</p>
-                        <p data-id="react-email-text" style="font-size:14px;line-height:24px;margin:16px 0;color:#777;margin-top:40px;text-align:center">See you soon,<br />On-chain in Enugu!</p>
+                        <p data-id="react-email-text" style="font-size:14px;line-height:24px;margin:16px 0;color:#777;margin-top:40px;text-align:center">See you soon, ${firstName}.<br />On-chain in Enugu!</p>
                     </td>
                     </tr>
                 </tbody>
