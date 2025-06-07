@@ -6,12 +6,22 @@ export async function getConferenceRegistrationByEmailRepository(
 ) {
   return await prisma.conferenceSummit.findUnique({
     where: { email },
+    include: {
+      preferredDates: {
+        orderBy: { date: "asc" },
+      },
+    },
   });
 }
 
 export async function getConferenceRegistrationByIdRepository(id: string) {
   return await prisma.conferenceSummit.findUnique({
     where: { id },
+    include: {
+      preferredDates: {
+        orderBy: { date: "asc" },
+      },
+    },
   });
 }
 
@@ -32,12 +42,17 @@ export async function getPaginatedConferenceRegistrationsRepository(
   const skip = (page - 1) * limit;
   const totalPages = Math.ceil(total / limit);
 
-  // Get paginated registrations
+  // Get paginated registrations with preferred dates
   const registrations = await prisma.conferenceSummit.findMany({
     where,
     skip,
     take: limit,
     orderBy: { createdAt: "desc" },
+    include: {
+      preferredDates: {
+        orderBy: { date: "asc" },
+      },
+    },
   });
 
   return {
@@ -50,16 +65,31 @@ export async function getPaginatedConferenceRegistrationsRepository(
 }
 
 export async function deleteConferenceRegistrationRepository(id: string) {
+  // The cascade delete will automatically remove related ConferenceDate records
   return await prisma.conferenceSummit.delete({
     where: { id },
   });
 }
 
 export async function createConferenceRegistrationRepository(
-  data: ConferenceSummitRegistration
+  data: Omit<ConferenceSummitRegistration, "preferredDates">,
+  possibleDates: string[]
 ) {
   const registration = await prisma.conferenceSummit.create({
-    data,
+    data: {
+      ...data,
+      preferredDates: {
+        create: possibleDates.map((dateString) => ({
+          date: new Date(dateString),
+        })),
+      },
+    },
+    include: {
+      preferredDates: {
+        orderBy: { date: "asc" },
+      },
+    },
   });
+
   return registration;
 }
