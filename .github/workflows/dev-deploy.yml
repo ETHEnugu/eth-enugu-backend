@@ -1,0 +1,110 @@
+name: Deploy to Hostinger VPS (Development)
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production # Ensures access to environment-specific secrets/variables
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: development # Ensure the development branch is checked out in the GitHub Action runner
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh # Ensures the .ssh directory exists
+          echo "${{ secrets.VPS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519 # Writes your private SSH key
+          chmod 600 ~/.ssh/id_ed25519 # Sets restrictive permissions (crucial for SSH)
+          # Add the VPS host to known_hosts to prevent SSH connection prompts
+          ssh-keyscan -H ${{ vars.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Hostinger VPS
+        env:
+          SSH_USER: ${{ vars.VPS_USER }} # User for SSH connection
+          SSH_HOST: ${{ vars.VPS_HOST }} # Hostname or IP for SSH connection
+        run: |
+          set -e # Exit immediately if a command exits with a non-zero status
+
+          # Define the path to the SSH key used by GitHub Actions to connect to your VPS
+          SSH_KEY_PATH=~/.ssh/id_ed25519
+
+          # Use ssh to execute commands on the remote VPS
+          ssh -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no "$SSH_USER"@"$SSH_HOST" bash -s << 'EOF'
+            set -e # Ensure script execution on VPS stops on first error
+
+            # Explicitly add the nvm bin path to the PATH for this session
+            # This ensures 'npm' is found regardless of the default shell configuration
+            export PATH="/root/.nvm/versions/node/v22.13.1/bin:$PATH"
+
+            PROJECT_PATH="/root/ethenugu/landing-page-api-dev"
+            REPO_URL="https://github.com/ETHEnugu/eth-enugu-backend.git"
+            TARGET_BRANCH="development" # Define the target branch for clarity
+
+            echo "🚀 Connected to server"
+
+            # Check if the .git directory exists inside the intended project path
+            if [ ! -d "$PROJECT_PATH/.git" ]; then
+              echo "No existing Git repository found at $PROJECT_PATH. Cloning fresh..."
+              # Ensure the parent directory (/root/ethenugu) exists before cloning
+              mkdir -p "$(dirname "$PROJECT_PATH")"
+              # Clone the repository directly into the PROJECT_PATH
+              git clone "$REPO_URL" "$PROJECT_PATH" || { echo "Error: Failed to clone repository!"; exit 1; }
+              cd "$PROJECT_PATH" # Navigate into the cloned repository
+              # After cloning, ensure we are on the correct branch
+              git checkout "$TARGET_BRANCH" || { echo "Error: Failed to checkout $TARGET_BRANCH after clone!"; exit 1; }
+              echo "✅ Repository cloned and $TARGET_BRANCH checked out."
+            else
+              echo "Existing Git repository found at $PROJECT_PATH."
+              cd "$PROJECT_PATH" || { echo "Error: Directory $PROJECT_PATH not found or accessible!"; exit 1; }
+
+              echo "Ensuring correct branch is checked out and up-to-date: $TARGET_BRANCH"
+              # First, fetch all remotes to ensure origin/development is up-to-date locally
+              git fetch origin || { echo "Error: Failed to fetch from origin!"; exit 1; }
+              # Switch to the target branch (or ensure we are on it)
+              git checkout "$TARGET_BRANCH" || { echo "Error: Failed to checkout $TARGET_BRANCH!"; exit 1; }
+              # Discard any local changes and reset to the remote state of the target branch
+              git reset --hard "origin/$TARGET_BRANCH" || { echo "Error: Failed to hard reset to origin/$TARGET_BRANCH!"; exit 1; }
+              # Pull the latest changes from the specific branch
+              git pull origin "$TARGET_BRANCH" || { echo "Error: Failed to pull latest code from $TARGET_BRANCH!"; exit 1; }
+              echo "✅ Code pulled and working directory updated."
+            fi
+
+            echo "📦 Installing ALL dependencies (including devDependencies) for build..."
+            # Using npm ci for clean installs based on package-lock.json
+            npm ci || { echo "Error: Failed to install all dependencies!"; exit 1; }
+
+            echo "⚙️ Generating Prisma Client..."
+            # Ensure Prisma Client is generated based on your schema
+            npx prisma generate || { echo "Error: Failed to generate Prisma Client!"; exit 1; }
+            echo "✅ Prisma Client generated."
+
+            echo "🗄️ Applying database migrations..."
+            # Apply pending migrations to the database (use 'deploy' for production)
+            # Ensure your DATABASE_URL environment variable is correctly set on the VPS
+            npx prisma migrate deploy || { echo "Error: Failed to apply database migrations!"; exit 1; }
+            echo "✅ Database migrations applied."
+
+            echo "🛠️ Building TypeScript project..."
+            npm run build || { echo "Error: Failed to build project!"; exit 1; }
+            echo "✅ Project built."
+
+            echo "🗑️ Cleaning up dev dependencies for production runtime..."
+            # Prune development dependencies for a leaner production environment
+            npm prune --production || { echo "Error: Failed to prune dev dependencies!"; exit 1; }
+            echo "✅ Dev dependencies pruned."
+
+            echo "♻️ Restarting app with PM2..."
+            # Ensure PM2 is in PATH, if not, add a common global npm bin path
+            # This accounts for cases where PM2 might be installed globally but not in default PATH
+            command -v pm2 >/dev/null 2>&1 || export PATH=$HOME/.npm-global/bin:$PATH
+            # Restart the PM2 process by name; if it doesn't exist, start it for the first time
+            pm2 restart ethenugu-landing-page-api-dev || pm2 start npm --name ethenugu-landing-page-api-dev -- start || { echo "Error: Failed to restart/start PM2 process!"; exit 1; }
+            pm2 save # Save the PM2 process list to restore on reboot
+            echo "✅ Deployment Done!"
+          EOF

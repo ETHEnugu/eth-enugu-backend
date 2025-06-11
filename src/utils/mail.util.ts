@@ -30,7 +30,7 @@ export const SendMail = async ({
   } as SMTPTransport["options"]);
 
   const mailOptions: Mail["options"] = {
-    from: MAIL_USERNAME,
+    from: `Team ETH Enugu <${MAIL_USERNAME}>`,
     to,
     subject,
     html,
