@@ -1,35 +1,35 @@
 model SpeakerApplication {
-   id                      String    @id @default(cuid())
-   createdAt               DateTime  @default(now())
-   updatedAt               DateTime  @updatedAt
-   
+   id        String   @id @default(cuid())
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+
    // Personal Information (Page 1)
-   fullName                String
-   email                   String    @unique
-   whatsappNumber          String
-   location                String
-   twitterProfile          String?
-   linkedinProfile         String
-   website                 String?
-   
+   fullName        String
+   email           String  @unique
+   whatsappNumber  String
+   location        String
+   twitterProfile  String?
+   linkedinProfile String
+   website         String?
+
    // Session Information (Page 2)
-   sessionType             SessionType
-   sessionLength           SessionLength
-   presentationAvailable   Boolean
-   presentationLink        String?
-   setupRequirements       String?   @db.Text
-   talkTitle               String?
-   talkDescription         String?   @db.Text
-   
+   sessionType           SessionType
+   sessionLength         SessionLength
+   presentationAvailable Boolean
+   presentationLink      String?
+   setupRequirements     String?       @db.Text
+   talkTitle             String?
+   talkDescription       String?       @db.Text
+
    // Travel Information (Page 3)
-   expectedArrivalDate     String?
+   expectedArrivalDate          DateTime            @db.DateTime()
    willingToSpeakWithoutSupport Boolean
-   referralSource          String    @db.Text
-   joinOnlineCommunity     JoinCommunityOption
-   
+   referralSource               String              @db.Text
+   joinOnlineCommunity          JoinCommunityOption
+
    // Status field
-   status                  ApplicationStatus @default(PENDING)
-   
+   status ApplicationStatus @default(PENDING)
+
    @@index([email])
    @@index([status])
 }
@@ -48,5 +48,3 @@ enum SessionLength {
    MINUTES_45
    MINUTES_60
 }
-
-
