@@ -14,6 +14,8 @@ import {
 import { Controller } from "../../types/index.types";
 import { z } from "zod";
 import { logger } from "../../utils/logger.utils";
+import { SendMail } from "../../utils/mail.util";
+import thankYouForRegistering from "../../template/thank-you-for-registering";
 
 /**
  * Create a new conference registration
@@ -37,9 +39,13 @@ export const createConferenceRegistration = async (
       });
     }
 
-    // Create new registration
+    // Extract possibleDates from validated data
+    const { preferredDates, ...otherData } = validatedData;
+
+    // Create new registration with preferred dates
     const newRegistration = await createConferenceRegistrationRepository(
-      validatedData
+      otherData,
+      preferredDates || []
     );
 
     const response = {
@@ -47,6 +53,12 @@ export const createConferenceRegistration = async (
       message: "Your Conference/Summit registration was submitted successfully",
       data: newRegistration,
     };
+
+    SendMail({
+      to: newRegistration.email,
+      subject: "Registeration Complete!",
+      html: thankYouForRegistering(newRegistration.fullName?.split(" ")[0]),
+    });
 
     return res.status(201).json(response);
   } catch (error) {
@@ -86,10 +98,21 @@ export const getConferenceRegistration = async (
       });
     }
 
+    // Transform the response to include possibleDates array
+    const transformedRegistration = {
+      ...registration,
+      possibleDates:
+        registration.preferredDates?.map((date) => date.date.toISOString()) ||
+        [],
+    };
+
+    // Remove the preferredDates from response since we're using possibleDates
+    const { preferredDates, ...responseData } = transformedRegistration;
+
     return res.status(200).json({
       success: true,
       message: "Registration retrieved successfully",
-      data: registration,
+      data: responseData,
     });
   } catch (error) {
     logger.error("Failed to get conference registration:", error);
@@ -126,10 +149,25 @@ export const getAllConferenceRegistrations = async (
       filter.status
     );
 
+    // Transform registrations to include possibleDates array
+    const transformedRegistrations = paginatedData.registrations.map(
+      (registration) => {
+        const { preferredDates, ...rest } = registration;
+        return {
+          ...rest,
+          possibleDates:
+            preferredDates?.map((date) => date.date.toISOString()) || [],
+        };
+      }
+    );
+
     const response = {
       success: true,
       message: "Registrations retrieved successfully",
-      data: paginatedData,
+      data: {
+        ...paginatedData,
+        registrations: transformedRegistrations,
+      },
     };
 
     res.status(200).json(response);

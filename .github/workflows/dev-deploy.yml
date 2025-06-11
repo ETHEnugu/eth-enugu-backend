@@ -1,0 +1,95 @@
+name: Deploy to Hostinger VPS (Development)
+
+on:
+  push:
+    branches:
+      - development 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production # Ensures access to environment-specific secrets/variables
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4 
+        with:
+          ref: development 
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh # Ensures the .ssh directory exists
+          echo "${{ secrets.VPS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519 # Writes your private SSH key
+          chmod 600 ~/.ssh/id_ed25519 # Sets restrictive permissions (crucial for SSH)
+          ssh-keyscan -H ${{ vars.VPS_HOST }} >> ~/.ssh/known_hosts # Adds the VPS host to known_hosts
+
+      - name: Deploy to Hostinger VPS
+        env:
+          SSH_USER: ${{ vars.VPS_USER }} # User for SSH connection
+          SSH_HOST: ${{ vars.VPS_HOST }} # Hostname or IP for SSH connection
+        run: |
+          set -e # Exit immediately if a command exits with a non-zero status
+
+          # Define the path to the SSH key used by GitHub Actions to connect to your VPS
+          SSH_KEY_PATH=~/.ssh/id_ed25519
+
+          # Use ssh to execute commands on the remote VPS
+          ssh -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no "$SSH_USER"@"$SSH_HOST" bash -s << 'EOF'
+            set -e # Ensure script execution on VPS stops on first error
+
+            # Explicitly add the nvm bin path to the PATH for this session
+            # This ensures 'npm' is found regardless of the default shell configuration
+            export PATH="/root/.nvm/versions/node/v22.13.1/bin:$PATH" 
+            
+            PROJECT_PATH="/root/ethenugu/landing-page-api-dev" 
+            REPO_URL="https://github.com/ETHEnugu/eth-enugu-backend.git" 
+
+            echo "🚀 Connected to server"
+
+            # Check if the .git directory exists inside the intended project path
+            if [ ! -d "$PROJECT_PATH/.git" ]; then
+              echo "No existing Git repository found at $PROJECT_PATH. Cloning fresh..."
+              # Ensure the parent directory (/root/ethenugu) exists before cloning
+              mkdir -p "$(dirname "$PROJECT_PATH")" 
+              # Clone the repository directly into the PROJECT_PATH
+              git clone "$REPO_URL" "$PROJECT_PATH" || { echo "Error: Failed to clone repository!"; exit 1; }
+              cd "$PROJECT_PATH" # Navigate into the cloned repository
+              echo "✅ Repository cloned."
+            else
+              echo "Existing Git repository found at $PROJECT_PATH."
+              cd "$PROJECT_PATH" || { echo "Error: Directory $PROJECT_PATH not found or accessible!"; exit 1; }
+              echo "📥 Pulling latest code..."
+              git pull || { echo "Error: Failed to pull latest code!"; exit 1; }
+              echo "✅ Code pulled."
+            fi
+          
+            echo "📦 Installing ALL dependencies (including devDependencies) for build..."
+            npm ci || { echo "Error: Failed to install all dependencies!"; exit 1; } # Removed --omit=dev
+
+            echo "⚙️ Generating Prisma Client..."
+            # Ensure Prisma Client is generated based on your schema
+            npx prisma generate || { echo "Error: Failed to generate Prisma Client!"; exit 1; }
+            echo "✅ Prisma Client generated."
+
+            echo "🗄️ Applying database migrations..."
+            # Apply pending migrations to the database (use 'deploy' for production)
+            # Ensure your DATABASE_URL environment variable is correctly set on the VPS where this script runs.
+            npx prisma migrate deploy || { echo "Error: Failed to apply database migrations!"; exit 1; }
+            echo "✅ Database migrations applied."
+
+            echo "🛠️ Building TypeScript project..."
+            npm run build || { echo "Error: Failed to build project!"; exit 1; }
+            echo "✅ Project built."
+
+            echo "🗑️ Cleaning up dev dependencies for production runtime..."
+            npm prune --production || { echo "Error: Failed to prune dev dependencies!"; exit 1; }
+            echo "✅ Dev dependencies pruned."
+
+            echo "♻️ Restarting app with PM2..."
+            # Ensure PM2 is in PATH, if not, add a common global npm bin path
+            command -v pm2 >/dev/null 2>&1 || export PATH=$HOME/.npm-global/bin:$PATH 
+            # Restart the PM2 process; if it doesn't exist, start it for the first time
+            pm2 restart ethenugu-landing-page-api-dev || pm2 start npm --name ethenugu-landing-page-api-dev -- start || { echo "Error: Failed to restart/start PM2 process!"; exit 1; }
+
+            echo "✅ Deployment Done!"
+          EOF

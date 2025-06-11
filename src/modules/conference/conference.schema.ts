@@ -51,6 +51,7 @@ export const conferenceSummitSchema = z.object({
   location: z.string().min(3, "Location is required"),
   age: AgeRangeEnum,
   gender: GenderEnum,
+  preferredDates: z.array(z.string().datetime()),
 
   // Conference Information (Page 2)
   roleDescription: RoleDescriptionEnum,
