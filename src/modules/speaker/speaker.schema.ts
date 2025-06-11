@@ -45,7 +45,7 @@ export const speakerApplicationSchema = z.object({
   talkDescription: z.string().optional().nullable(),
 
   // Travel Information (Page 3)
-  expectedArrivalDate: z.string().optional().nullable(),
+  expectedArrivalDate: z.string().datetime(),
   willingToSpeakWithoutSupport: z.boolean(),
   referralSource: z
     .string()
