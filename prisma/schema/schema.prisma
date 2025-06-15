@@ -15,23 +15,13 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-enum Gender {
-  MALE
-  FEMALE
-  OTHER
-  PREFER_NOT_TO_SAY
-}
+
 
 enum StringBoolean {
   YES
   NO
 }
 
-enum ApplicationStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
 
 enum JoinCommunityOption {
   YES

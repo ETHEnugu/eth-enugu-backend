@@ -38,9 +38,14 @@ export const createSpeakerApplication = async (
       });
     }
 
-    // Create new application
+    // Extract roles and expectedArrivalDates from validated data
+    const { roles, expectedArrivalDates, ...otherData } = validatedData;
+
+    // Create new application with roles and arrival dates
     const newApplication = await createSpeakerApplicationRepository(
-      validatedData
+      otherData,
+      roles,
+      expectedArrivalDates
     );
 
     const response = {
@@ -87,10 +92,20 @@ export const getSpeakerApplication = async (
       });
     }
 
+    // Transform the response to include roles and expectedArrivalDates arrays
+    const transformedApplication = {
+      ...application,
+      roles: application.roles?.map((role) => role.role) || [],
+      expectedArrivalDates:
+        application.expectedArrivalDates?.map((date) =>
+          date.date.toISOString()
+        ) || [],
+    };
+
     return res.status(200).json({
       success: true,
       message: "Speaker application retrieved successfully",
-      data: application,
+      data: transformedApplication,
     });
   } catch (error) {
     logger.error("Failed to get speaker application:", error);
@@ -127,13 +142,29 @@ export const getAllSpeakerApplications = async (
       {
         status: filter.status,
         sessionType: filter.sessionType,
+        participationType: filter.participationType,
       }
+    );
+
+    // Transform applications to include roles and expectedArrivalDates arrays
+    const transformedApplications = paginatedData.applications.map(
+      (application) => ({
+        ...application,
+        roles: application.roles?.map((role) => role.role) || [],
+        expectedArrivalDates:
+          application.expectedArrivalDates?.map((date) =>
+            date.date.toISOString()
+          ) || [],
+      })
     );
 
     const response = {
       success: true,
       message: "Speaker applications retrieved successfully",
-      data: paginatedData,
+      data: {
+        ...paginatedData,
+        applications: transformedApplications,
+      },
     };
 
     res.status(200).json(response);
