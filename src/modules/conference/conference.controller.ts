@@ -155,7 +155,7 @@ export const getAllConferenceRegistrations = async (
         const { preferredDates, ...rest } = registration;
         return {
           ...rest,
-          possibleDates:
+          preferredDates:
             preferredDates?.map((date) => date.date.toISOString()) || [],
         };
       }

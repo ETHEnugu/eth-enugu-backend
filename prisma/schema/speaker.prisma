@@ -1,50 +1,126 @@
 model SpeakerApplication {
-   id        String   @id @default(cuid())
-   createdAt DateTime @default(now())
-   updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-   // Personal Information (Page 1)
-   fullName        String
-   email           String  @unique
-   whatsappNumber  String
-   location        String
-   twitterProfile  String?
-   linkedinProfile String
-   website         String?
+  // Personal Information (Page 1)
+  fullName        String
+  email           String  @unique
+  gender          Gender
+  whatsappNumber  String
+  country        String
+  bio             String  @db.Text
+  twitterProfile  String?
+  linkedinProfile String? // Made optional
+  
+  // Roles (relationship to separate table)
+  roles     SpeakerRole[]
+  otherRole String?
+  
+  // Participation type
+  participationType ParticipationType
 
-   // Session Information (Page 2)
-   sessionType           SessionType
-   sessionLength         SessionLength
-   presentationAvailable Boolean
-   presentationLink      String?
-   setupRequirements     String?       @db.Text
-   talkTitle             String?
-   talkDescription       String?       @db.Text
+  // Session Information (Page 2)
+  sessionType                  SessionType
+  otherSessionType            String?
+  sessionLength               SessionLength
+  presentationAvailable       Boolean
+  presentationLink            String? // Made optional
+  setupRequirements           String?       @db.Text
+  talkTitle                   String?
+  talkDescription             String?       @db.Text
+  comfortableWithTopicChange  Boolean
 
-   // Travel Information (Page 3)
-   expectedArrivalDate          DateTime            @db.DateTime()
-   willingToSpeakWithoutSupport Boolean
-   referralSource               String              @db.Text
-   joinOnlineCommunity          JoinCommunityOption
+  // Travel Information (Page 3)
+  canMakeItToEnugu             Boolean
+  expectedArrivalDates         SpeakerArrivalDate[] // Relationship to separate table
+  
+  // Ethereum Research Village
+  participateInERV Boolean
+  ervInvolvement   ERVInvolvement?
 
-   // Status field
-   status ApplicationStatus @default(PENDING)
+  // Status field
+  status ApplicationStatus @default(PENDING)
 
-   @@index([email])
-   @@index([status])
+  @@index([email])
+  @@index([status])
+}
+
+// Separate table for roles (to handle string array)
+model SpeakerRole {
+  id                 String           @id @default(cuid())
+  role               SpeakerRoleType  // Updated to use enum
+  speakerApplication SpeakerApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  applicationId      String
+
+  @@index([applicationId])
+}
+
+// Separate table for arrival dates (to handle string array)
+model SpeakerArrivalDate {
+  id                 String           @id @default(cuid())
+  date               DateTime
+  speakerApplication SpeakerApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  applicationId      String
+
+  @@index([applicationId])
+}
+
+// Updated enums
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+enum SpeakerRoleType {
+  BLOCKCHAIN_DEVELOPER_ENGINEER
+  CORE_PROTOCOL_ENGINEER
+  FRONTEND_BACKEND_FULLSTACK_DEVELOPER
+  TECHNICAL_WRITER
+  RESEARCHERS
+  NODE_RUNNERS_AND_OPERATORS
+  WEB3_SECURITY_AND_AUDITORS
+  GENERAL_BLOCKCHAIN_CRYPTO_ENTHUSIAST
+  CONTENT_CREATORS_AND_CONTENT_WRITERS
+  UI_UX_AND_CREATIVE_DESIGNERS
+  COMMUNITY_SOCIAL_MEDIA_MANAGER
+  WEB3_COMMUNITY_LEADER
+  CRYPTO_TRADERS_DEGENS
+  OTHER
 }
 
 enum SessionType {
-   TALK
-   PANEL
-   WORKSHOP
-   FIRESIDE_CHAT
-   OTHER
+  TALK
+  PANEL
+  WORKSHOP
+  FIRESIDE_CHAT
+  OTHER
 }
 
 enum SessionLength {
-   MINUTES_15
-   MINUTES_30
-   MINUTES_45
-   MINUTES_60
+  MINUTES_5    // Added
+  MINUTES_10   // Added
+  MINUTES_15
+  MINUTES_30
+  MINUTES_45
+  MINUTES_60
+}
+
+enum ParticipationType {
+  MENTOR_ONLY
+  SPEAK_ONLY
+  BOTH
+}
+
+enum ERVInvolvement {
+  LEARN_DURING_ERV
+  MENTOR_DURING_ERV
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
