@@ -8,7 +8,7 @@ model SpeakerApplication {
   email           String  @unique
   gender          Gender
   whatsappNumber  String
-  location        String
+  country        String
   bio             String  @db.Text
   twitterProfile  String?
   linkedinProfile String? // Made optional
@@ -34,7 +34,6 @@ model SpeakerApplication {
   // Travel Information (Page 3)
   canMakeItToEnugu             Boolean
   expectedArrivalDates         SpeakerArrivalDate[] // Relationship to separate table
-  willingToSpeakWithoutSupport Boolean
   
   // Ethereum Research Village
   participateInERV Boolean
