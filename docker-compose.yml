@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ethenugu-mysql-dev
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ethenugu_dev
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: devpass
+    ports:
+      - "3307:3306" # Use 3307 to avoid conflicts with local MySQL
+    volumes:
+      - mysql_dev_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+  mysql-shadow:
+    image: mysql:8.0
+    container_name: ethenugu-mysql-shadow
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ethenugu_shadow
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: devpass
+    ports:
+      - "3308:3306" # Shadow database on different port
+    command: --default-authentication-plugin=mysql_native_password
+
+volumes:
+  mysql_dev_data:
