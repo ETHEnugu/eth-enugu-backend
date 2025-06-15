@@ -84,11 +84,11 @@ jobs:
             npx prisma generate || { echo "Error: Failed to generate Prisma Client!"; exit 1; }
             echo "✅ Prisma Client generated."
 
-            echo "🗄️ Applying database migrations..."
-            # Apply pending migrations to the database (use 'deploy' for production)
-            # Ensure your DATABASE_URL environment variable is correctly set on the VPS
-            npx prisma migrate deploy || { echo "Error: Failed to apply database migrations!"; exit 1; }
-            echo "✅ Database migrations applied."
+            echo "🗄️ Syncing database schema..."
+            # Push schema changes to database (compatible with Hostinger/shared hosting)
+            # This replaces 'npx prisma migrate deploy' which requires shadow database permissions
+            npx prisma db push || { echo "Error: Failed to sync database schema!"; exit 1; }
+            echo "✅ Database schema synced."
 
             echo "🛠️ Building TypeScript project..."
             npm run build || { echo "Error: Failed to build project!"; exit 1; }
