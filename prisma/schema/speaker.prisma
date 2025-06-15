@@ -50,7 +50,7 @@ model SpeakerApplication {
 // Separate table for roles (to handle string array)
 model SpeakerRole {
   id                 String           @id @default(cuid())
-  role               String
+  role               SpeakerRoleType  // Updated to use enum
   speakerApplication SpeakerApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   applicationId      String
 
@@ -73,6 +73,23 @@ enum Gender {
   FEMALE
   OTHER
   PREFER_NOT_TO_SAY
+}
+
+enum SpeakerRoleType {
+  BLOCKCHAIN_DEVELOPER_ENGINEER
+  CORE_PROTOCOL_ENGINEER
+  FRONTEND_BACKEND_FULLSTACK_DEVELOPER
+  TECHNICAL_WRITER
+  RESEARCHERS
+  NODE_RUNNERS_AND_OPERATORS
+  WEB3_SECURITY_AND_AUDITORS
+  GENERAL_BLOCKCHAIN_CRYPTO_ENTHUSIAST
+  CONTENT_CREATORS_AND_CONTENT_WRITERS
+  UI_UX_AND_CREATIVE_DESIGNERS
+  COMMUNITY_SOCIAL_MEDIA_MANAGER
+  WEB3_COMMUNITY_LEADER
+  CRYPTO_TRADERS_DEGENS
+  OTHER
 }
 
 enum SessionType {
