@@ -8,6 +8,23 @@ export const GenderEnum = z.enum([
   "PREFER_NOT_TO_SAY",
 ]);
 
+export const SpeakerRoleEnum = z.enum([
+  "BLOCKCHAIN_DEVELOPER_ENGINEER",
+  "CORE_PROTOCOL_ENGINEER",
+  "FRONTEND_BACKEND_FULLSTACK_DEVELOPER",
+  "TECHNICAL_WRITER",
+  "RESEARCHERS",
+  "NODE_RUNNERS_AND_OPERATORS",
+  "WEB3_SECURITY_AND_AUDITORS",
+  "GENERAL_BLOCKCHAIN_CRYPTO_ENTHUSIAST",
+  "CONTENT_CREATORS_AND_CONTENT_WRITERS",
+  "UI_UX_AND_CREATIVE_DESIGNERS",
+  "COMMUNITY_SOCIAL_MEDIA_MANAGER",
+  "WEB3_COMMUNITY_LEADER",
+  "CRYPTO_TRADERS_DEGENS",
+  "OTHER",
+]);
+
 export const SessionTypeEnum = z.enum([
   "TALK",
   "PANEL",
@@ -56,7 +73,7 @@ export const speakerApplicationSchema = z
     linkedinProfile: z.string().optional().nullable(), // Made optional
 
     // Roles (handled as array with conditional other)
-    roles: z.array(z.string()).min(1, "Please select at least one role"),
+    roles: z.array(SpeakerRoleEnum).min(1, "Please select at least one role"),
     otherRole: z.string().optional(),
 
     // Participation type
@@ -152,6 +169,7 @@ export const filterApplicationsSchema = z.object({
 
 // Types derived from Zod schemas
 export type Gender = z.infer<typeof GenderEnum>;
+export type SpeakerRole = z.infer<typeof SpeakerRoleEnum>;
 export type SessionType = z.infer<typeof SessionTypeEnum>;
 export type SessionLength = z.infer<typeof SessionLengthEnum>;
 export type ParticipationType = z.infer<typeof ParticipationTypeEnum>;

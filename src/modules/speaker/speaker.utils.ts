@@ -1,5 +1,5 @@
 import { prisma } from "../../utils/prisma.utils";
-import { SpeakerApplication } from "./speaker.schema";
+import { SpeakerApplication, SpeakerRole } from "./speaker.schema";
 
 export async function getSpeakerApplicationByEmailRepository(email: string) {
   return await prisma.speakerApplication.findUnique({
@@ -90,7 +90,7 @@ export async function deleteSpeakerApplicationRepository(id: string) {
 
 export async function createSpeakerApplicationRepository(
   data: Omit<SpeakerApplication, "roles" | "expectedArrivalDates">,
-  roles: string[],
+  roles: SpeakerRole[], // Will be validated as SpeakerRoleEnum values
   expectedArrivalDates: string[]
 ) {
   const application = await prisma.speakerApplication.create({
