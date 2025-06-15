@@ -67,7 +67,7 @@ export const speakerApplicationSchema = z
     email: z.string().email("Invalid email address"),
     gender: GenderEnum,
     whatsappNumber: z.string().min(10, "Valid WhatsApp number is required"),
-    location: z.string().min(3, "Location is required"),
+    country: z.string().min(3, "Location is required"),
     bio: z.string().min(10, "Please provide a brief bio"),
     twitterProfile: z.string().optional().nullable(),
     linkedinProfile: z.string().optional().nullable(), // Made optional
@@ -99,7 +99,6 @@ export const speakerApplicationSchema = z
     expectedArrivalDates: z
       .array(z.string().datetime())
       .min(1, "Please provide at least one arrival date"),
-    willingToSpeakWithoutSupport: z.boolean(),
 
     // Ethereum Research Village
     participateInERV: z.boolean(),
