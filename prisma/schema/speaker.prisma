@@ -16,6 +16,7 @@ model SpeakerApplication {
   // Roles (relationship to separate table)
   roles     SpeakerRole[]
   otherRole String?
+  state     String
   
   // Participation type
   participationType ParticipationType

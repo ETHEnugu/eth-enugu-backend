@@ -68,6 +68,7 @@ export const speakerApplicationSchema = z
     gender: GenderEnum,
     whatsappNumber: z.string().min(10, "Valid WhatsApp number is required"),
     country: z.string().min(3, "Location is required"),
+    state: z.string().min(3, "Please provide state"),
     bio: z.string().min(10, "Please provide a brief bio"),
     twitterProfile: z.string().optional().nullable(),
     linkedinProfile: z.string().optional().nullable(), // Made optional
