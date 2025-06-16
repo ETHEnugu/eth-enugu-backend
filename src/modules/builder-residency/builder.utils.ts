@@ -48,7 +48,7 @@ export async function createBuilderResidencyRepository(
   data: BuilderResidencyApplication
 ) {
   const builder = await prisma.builder.create({
-    data,
+    data: { ...data, primaryRole: data.primaryRole.join(", ") },
   });
   return builder;
 }

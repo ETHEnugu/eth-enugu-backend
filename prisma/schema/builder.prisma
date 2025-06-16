@@ -1,47 +1,46 @@
 model Builder {
-  id                 String    @id @default(cuid())
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Personal Information (Page 1)
-  fullName           String
-  email              String    @unique
-  gender             Gender
-  whatsappNumber     String
-  location           String    // Country, State & City
-  githubProfile      String?
-  twitterProfile     String
-  linkedinProfile    String
-  portfolioUrl       String?
-  
+  fullName         String
+  email            String  @unique
+  gender           Gender
+  whatsappNumber   String
+  country          String
+  stateOfResidence String
+  githubProfile    String?
+  twitterProfile   String
+  linkedinProfile  String?
+  portfolioUrl     String?
+
   // Background Information (Page 2)
-  primaryRole        PrimaryRole
-  backgroundAndSkills String    @db.Text
-  currentlyBuilding  String    @db.Text
-  previousBuilderPrograms Boolean
-  
+  primaryRole                  String
+  otherPrimaryRole             String?
+  backgroundAndSkills          String                  @db.Text
+  currentlyBuilding            String                  @db.Text
+  previousBuilderPrograms      PreviousBuilderPrograms
+  hasRegisteredForTheHackathon Boolean
+
   // Residency Information (Page 3)
-  joinReason         String    @db.Text
-  projectInterest    String
-  openToCollaboration Boolean
-  needsAccommodation Boolean
-  dietaryAccessibilityNeeds String?  @db.Text
-  referralSource     String    @db.Text
-  joinOnlineCommunity Boolean
-  
+  joinReason                     String  @db.Text
+  openToCollaboration            Boolean
+  comfortableSharingAccomodation Boolean
+  dietaryAccessibilityNeeds      String? @db.Text
+  willBeLive                     Boolean
+  referralSource                 String  @db.Text
+
   // Status fields
-  status             ApplicationStatus @default(PENDING)
-  
+  status ApplicationStatus @default(PENDING)
+
   @@index([email])
   @@index([status])
 }
 
-
-
-enum PrimaryRole {
-  DEVELOPER
-  DESIGNER
-  FOUNDER
-  RESEARCHER
-  OTHER
+enum PreviousBuilderPrograms {
+  YES_BUILDER_RESIDENCY
+  YES_POP_CITY
+  YES_HACKATHON
+  NO
 }
