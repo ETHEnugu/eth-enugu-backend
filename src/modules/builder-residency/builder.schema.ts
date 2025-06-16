@@ -19,68 +19,57 @@ export const ApplicationStatusEnum = z.enum([
   "APPROVED",
   "REJECTED",
 ]);
+export const PreviousBuilderProgramsEnum = z.enum([
+  "YES_BUILDER_RESIDENCY",
+  "YES_POP_CITY",
+  "YES_HACKATHON",
+  "NO",
+]);
 
 // Single comprehensive schema for the entire form
-export const builderResidencySchema = z
-  .object({
-    // Personal Information (Page 1)
-    fullName: z.string().min(3, "Full name is required"),
-    email: z.string().email("Invalid email address"),
-    gender: GenderEnum,
-    whatsappNumber: z.string().min(10, "Valid WhatsApp number is required"),
-    location: z.string().min(3, "Location is required"),
-    githubProfile: z
-      .string()
-      .url("Must be a valid URL")
-      .optional()
-      .or(z.literal("")),
-    twitterProfile: z.string().min(1, "Twitter/X profile is required"),
-    linkedinProfile: z.string().min(1, "LinkedIn profile is required"),
-    portfolioUrl: z
-      .string()
-      .url("Must be a valid URL")
-      .optional()
-      .or(z.literal("")),
+export const builderResidencySchema = z.object({
+  // Personal Information (Page 1)
+  fullName: z.string().min(3, "Full name is required"),
+  email: z.string().email("Invalid email address"),
+  gender: GenderEnum,
+  whatsappNumber: z.string().min(10, "Valid WhatsApp number is required"),
+  country: z.string().min(3, "Country is required"),
+  stateOfResidence: z.string().min(3, "State of residence is required"),
+  githubProfile: z
+    .string()
+    .url("Must be a valid URL")
+    .optional()
+    .or(z.literal("")),
+  twitterProfile: z.string().min(1, "Twitter/X profile is required"),
+  linkedinProfile: z.string().optional(),
+  portfolioUrl: z
+    .string()
+    .url("Must be a valid URL")
+    .optional()
+    .or(z.literal("")),
 
-    // Background Information (Page 2)
-    primaryRole: PrimaryRoleEnum,
-    otherPrimaryRole: z.string().optional(),
-    backgroundAndSkills: z
-      .string()
-      .min(10, "Please share more about your background"),
-    currentlyBuilding: z
-      .string()
-      .min(3, "Please answer if you are currently building something"),
-    previousBuilderPrograms: z.boolean(),
+  // Background Information (Page 2)
+  primaryRole: z.array(z.string()),
+  otherPrimaryRole: z.string().optional(),
+  backgroundAndSkills: z
+    .string()
+    .min(10, "Please share more about your background"),
+  currentlyBuilding: z
+    .string()
+    .min(3, "Please answer if you are currently building something"),
+  previousBuilderPrograms: PreviousBuilderProgramsEnum,
+  hasRegisteredForTheHackathon: z.boolean(),
 
-    // Residency Information (Page 3)
-    joinReason: z.string().min(10, "Please explain why you want to join"),
-    projectInterest: z
-      .string()
-      .min(3, "Please select what you want to work on"),
-    openToCollaboration: z.boolean(),
-    needsAccommodation: z.boolean(),
-    dietaryAccessibilityNeeds: z.string().optional(),
-    referralSource: z
-      .string()
-      .min(3, "Please let us know how you heard about us"),
-    joinOnlineCommunity: z.boolean(),
-  })
-  .refine(
-    (data) => {
-      // If primaryRole is "OTHER", then otherPrimaryRole is required
-      if (data.primaryRole === "OTHER") {
-        return (
-          data.otherPrimaryRole && data.otherPrimaryRole.trim().length >= 3
-        );
-      }
-      return true;
-    },
-    {
-      message: "Please specify your primary role when selecting 'OTHER'",
-      path: ["otherPrimaryRole"],
-    }
-  );
+  // Residency Information (Page 3)
+  joinReason: z.string().min(10, "Please explain why you want to join"),
+  openToCollaboration: z.boolean(),
+  comfortableSharingAccomodation: z.boolean(),
+  dietaryAccessibilityNeeds: z.string().optional(),
+  willBeLive: z.boolean(),
+  referralSource: z
+    .string()
+    .min(3, "Please let us know how you heard about us"),
+});
 
 // Schema for updating application status
 export const updateStatusSchema = z.object({
