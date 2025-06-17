@@ -54,10 +54,24 @@ export async function deletePopupRegistrationRepository(id: string) {
 }
 
 export async function createPopupRegistrationRepository(
-  data: PopupCityRegistration
+  data: Omit<PopupCityRegistration, "preferredDates">,
+  possibleDates: string[]
 ) {
   const registration = await prisma.popupCity.create({
-    data,
+    data: {
+      ...data,
+      role: data.role.join(", "),
+      preferredDates: {
+        create: possibleDates.map((dateString) => ({
+          date: new Date(dateString),
+        })),
+      },
+    },
+    include: {
+      preferredDates: {
+        orderBy: { date: "asc" },
+      },
+    },
   });
   return registration;
 }

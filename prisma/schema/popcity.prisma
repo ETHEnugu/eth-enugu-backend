@@ -1,37 +1,43 @@
 model PopupCity {
-   id                      String    @id @default(cuid())
-   createdAt               DateTime  @default(now())
-   updatedAt               DateTime  @updatedAt
-   
+   id        String   @id @default(cuid())
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+
    // Personal Information (Page 1)
-   fullName                String
-   email                   String    @unique
-   gender                  Gender
-   whatsappNumber          String
-   location                String
-   
+   fullName       String
+   email          String @unique
+   gender         Gender
+   whatsappNumber String
+   country        String
+   state          String
+   walletAddress  String
+
    // Background Information (Page 1)
-   currentRole             CurrentRole
-   web3Familiarity         Web3Familiarity
-   
+   role            String
+   otherRole       String?
+   web3Familiarity Web3Familiarity
+
    // Event Information (Page 2)
-   attendDay1              String?  // Date format stored as string
-   attendDay2              String?  // Date format stored as string
-   freeLunchConsideration  String?  @db.Text
-   volunteeringInterest    VolunteerOption
-   
+   attendDay1             String? // Date format stored as string
+   attendDay2             String? // Date format stored as string
+   freeLunchConsideration String?         @db.Text
+   volunteeringInterest   VolunteerOption
+   preferredDates         PopCityDate[]
+   canAttendIRL           Boolean
+   participateInERV       Boolean
+   isCertificateNeeded    Boolean
+
    // Additional Information (Page 2)
-   dietaryAccessibilityNeeds String?  @db.Text
-   referralSource          String    @db.Text
-   joinOnlineCommunity     JoinCommunityOption
-   
+   dietaryAccessibilityNeeds String?             @db.Text
+   referralSource            String              @db.Text
+   joinOnlineCommunity       JoinCommunityOption
+
    // Status field
-   status                  RegistrationStatus @default(PENDING)
-   
+   status RegistrationStatus @default(PENDING)
+
    @@index([email])
    @@index([status])
 }
-
 
 enum CurrentRole {
    STUDENT
@@ -54,10 +60,17 @@ enum VolunteerOption {
    MAYBE
 }
 
-
-
 enum RegistrationStatus {
    PENDING
    APPROVED
    REJECTED
+}
+
+model PopCityDate {
+   id        String    @id @default(cuid())
+   date      DateTime
+   popupCity PopupCity @relation(fields: [summitId], references: [id], onDelete: Cascade)
+   summitId  String
+
+   @@index([summitId])
 }

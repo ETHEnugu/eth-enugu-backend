@@ -38,9 +38,13 @@ export const createPopupRegistration = async (
       });
     }
 
-    // Create new registration
+    // Extract possibleDates from validated data
+    const { preferredDates, ...otherData } = validatedData;
+
+    // Create new registration with preferred dates
     const newRegistration = await createPopupRegistrationRepository(
-      validatedData
+      otherData,
+      preferredDates || []
     );
 
     const response = {

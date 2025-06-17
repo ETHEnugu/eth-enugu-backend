@@ -40,10 +40,13 @@ export const popupCitySchema = z.object({
   email: z.string().email("Invalid email address"),
   gender: GenderEnum,
   whatsappNumber: z.string().min(10, "Valid WhatsApp number is required"),
-  location: z.string().min(3, "Location is required"),
+  country: z.string(),
+  state: z.string(),
+  walletAddress: z.string(),
 
   // Background Information (Page 1)
-  currentRole: CurrentRoleEnum,
+  role: z.array(z.string()),
+  otherRole: z.string().optional(),
   web3Familiarity: Web3FamiliarityEnum,
 
   // Event Information (Page 2)
@@ -51,6 +54,10 @@ export const popupCitySchema = z.object({
   attendDay2: z.string().optional().nullable(),
   freeLunchConsideration: z.string().optional().nullable(),
   volunteeringInterest: VolunteerOptionEnum,
+  preferredDates: z.array(z.string().datetime()),
+  canAttendIRL: z.boolean(),
+  participateInERV: z.boolean(),
+  isCertificateNeeded: z.boolean(),
 
   // Additional Information (Page 2)
   dietaryAccessibilityNeeds: z.string().optional().nullable(),
