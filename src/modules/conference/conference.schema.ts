@@ -49,15 +49,18 @@ export const conferenceSummitSchema = z.object({
   email: z.string().email("Invalid email address"),
   whatsappNumber: z.string().min(10, "Valid WhatsApp number is required"),
   location: z.string().min(3, "Location is required"),
+  city: z.string().optional(),
   age: AgeRangeEnum,
   gender: GenderEnum,
   preferredDates: z.array(z.string().datetime()),
+  social: z.string().url(),
 
   // Conference Information (Page 2)
   roleDescription: RoleDescriptionEnum,
   expectedGains: z.string().optional().nullable(),
   attendanceType: AttendanceTypeEnum,
   certificateNeeded: BooleanEnum,
+  openToVolunteer: z.boolean(),
 
   // Additional Information (Page 2)
   dietaryAccessibilityNeeds: z.string().optional().nullable(),
