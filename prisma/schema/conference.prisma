@@ -8,15 +8,18 @@ model ConferenceSummit {
    email          String   @unique
    whatsappNumber String
    location       String
+   city           String?
    age            AgeRange
    gender         Gender
+   social         String
 
    // Conference Information (Page 2)
    roleDescription   RoleDescription
-   expectedGains     String?         @db.Text
+   expectedGains     String?          @db.Text
    attendanceType    AttendanceType
    certificateNeeded StringBoolean
-   preferredDates ConferenceDate[]
+   preferredDates    ConferenceDate[]
+   openToVolunteer   Boolean
 
    // Additional Information (Page 2)
    dietaryAccessibilityNeeds String?             @db.Text
@@ -31,12 +34,12 @@ model ConferenceSummit {
 }
 
 model ConferenceDate {
-  id               String          @id @default(cuid())
-  date             DateTime
-  conferenceSummit ConferenceSummit @relation(fields: [summitId], references: [id], onDelete: Cascade)
-  summitId         String
-  
-  @@index([summitId])
+   id               String           @id @default(cuid())
+   date             DateTime
+   conferenceSummit ConferenceSummit @relation(fields: [summitId], references: [id], onDelete: Cascade)
+   summitId         String
+
+   @@index([summitId])
 }
 
 enum AgeRange {
