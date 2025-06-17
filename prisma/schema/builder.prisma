@@ -4,31 +4,33 @@ model Builder {
   updatedAt DateTime @updatedAt
 
   // Personal Information (Page 1)
-  fullName         String
-  email            String  @unique
-  gender           Gender
-  whatsappNumber   String
-  country          String
-  stateOfResidence String
-  githubProfile    String?
-  twitterProfile   String
-  linkedinProfile  String?
-  portfolioUrl     String?
+  fullName       String
+  email          String   @unique
+  gender         Gender
+  age            AgeRange
+  whatsappNumber String
+  country        String
+  state          String
+  city           String?
+  walletAddress  String
+  githubProfile  String?
+  social         String
+  portfolioUrl   String?
 
   // Background Information (Page 2)
   primaryRole                  String
   otherPrimaryRole             String?
-  backgroundAndSkills          String                  @db.Text
-  currentlyBuilding            String                  @db.Text
-  previousBuilderPrograms      PreviousBuilderPrograms
+  backgroundAndSkills          String  @db.Text
+  currentlyBuilding            String  @db.Text
+  previousBuilderPrograms      String
   hasRegisteredForTheHackathon Boolean
 
   // Residency Information (Page 3)
   joinReason                     String  @db.Text
-  openToCollaboration            Boolean
   comfortableSharingAccomodation Boolean
   dietaryAccessibilityNeeds      String? @db.Text
   willBeLive                     Boolean
+  needCertificate                Boolean
   referralSource                 String  @db.Text
 
   // Status fields

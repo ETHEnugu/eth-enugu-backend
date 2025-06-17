@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AgeRangeEnum } from "../conference/conference.schema";
 
 // Enums matching Prisma schema
 export const GenderEnum = z.enum([
@@ -32,16 +33,18 @@ export const builderResidencySchema = z.object({
   fullName: z.string().min(3, "Full name is required"),
   email: z.string().email("Invalid email address"),
   gender: GenderEnum,
+  age: AgeRangeEnum,
   whatsappNumber: z.string().min(10, "Valid WhatsApp number is required"),
   country: z.string().min(3, "Country is required"),
-  stateOfResidence: z.string().min(3, "State of residence is required"),
+  state: z.string().min(3, "State of residence is required"),
+  city: z.string().optional(),
+  walletAddress: z.string(),
   githubProfile: z
     .string()
     .url("Must be a valid URL")
     .optional()
     .or(z.literal("")),
-  twitterProfile: z.string().min(1, "Twitter/X profile is required"),
-  linkedinProfile: z.string().optional(),
+  social: z.string().url("Social profile is required"),
   portfolioUrl: z
     .string()
     .url("Must be a valid URL")
@@ -57,15 +60,15 @@ export const builderResidencySchema = z.object({
   currentlyBuilding: z
     .string()
     .min(3, "Please answer if you are currently building something"),
-  previousBuilderPrograms: PreviousBuilderProgramsEnum,
+  previousBuilderPrograms: z.array(PreviousBuilderProgramsEnum),
   hasRegisteredForTheHackathon: z.boolean(),
 
   // Residency Information (Page 3)
   joinReason: z.string().min(10, "Please explain why you want to join"),
-  openToCollaboration: z.boolean(),
   comfortableSharingAccomodation: z.boolean(),
   dietaryAccessibilityNeeds: z.string().optional(),
   willBeLive: z.boolean(),
+  needCertificate: z.boolean(),
   referralSource: z
     .string()
     .min(3, "Please let us know how you heard about us"),
