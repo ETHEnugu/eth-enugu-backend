@@ -17,6 +17,9 @@ model SpeakerApplication {
   roles     SpeakerRole[]
   otherRole String?
   state     String
+  city      String?
+  social    String
+  portfolioUrl    String
   
   // Participation type
   participationType ParticipationType
@@ -27,7 +30,6 @@ model SpeakerApplication {
   sessionLength               SessionLength
   presentationAvailable       Boolean
   presentationLink            String? // Made optional
-  setupRequirements           String?       @db.Text
   talkTitle                   String?
   talkDescription             String?       @db.Text
   comfortableWithTopicChange  Boolean
