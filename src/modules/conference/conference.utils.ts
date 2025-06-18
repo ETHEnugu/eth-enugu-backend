@@ -6,22 +6,12 @@ export async function getConferenceRegistrationByEmailRepository(
 ) {
   return await prisma.conferenceSummit.findUnique({
     where: { email },
-    include: {
-      preferredDates: {
-        orderBy: { date: "asc" },
-      },
-    },
   });
 }
 
 export async function getConferenceRegistrationByIdRepository(id: string) {
   return await prisma.conferenceSummit.findUnique({
     where: { id },
-    include: {
-      preferredDates: {
-        orderBy: { date: "asc" },
-      },
-    },
   });
 }
 
@@ -48,11 +38,6 @@ export async function getPaginatedConferenceRegistrationsRepository(
     skip,
     take: limit,
     orderBy: { createdAt: "desc" },
-    include: {
-      preferredDates: {
-        orderBy: { date: "asc" },
-      },
-    },
   });
 
   return {
@@ -72,22 +57,12 @@ export async function deleteConferenceRegistrationRepository(id: string) {
 }
 
 export async function createConferenceRegistrationRepository(
-  data: Omit<ConferenceSummitRegistration, "preferredDates">,
-  possibleDates: string[]
+  data: ConferenceSummitRegistration
 ) {
   const registration = await prisma.conferenceSummit.create({
     data: {
       ...data,
-      preferredDates: {
-        create: possibleDates.map((dateString) => ({
-          date: new Date(dateString),
-        })),
-      },
-    },
-    include: {
-      preferredDates: {
-        orderBy: { date: "asc" },
-      },
+      roleDescription: data.roleDescription.join(", "),
     },
   });
 
