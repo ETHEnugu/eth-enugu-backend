@@ -69,6 +69,11 @@ export const speakerApplicationSchema = z
     whatsappNumber: z.string().min(10, "Valid WhatsApp number is required"),
     country: z.string().min(3, "Location is required"),
     state: z.string().min(3, "Please provide state"),
+
+    city: z.string().optional(),
+    social: z.string(),
+    portfolioUrl: z.string(),
+
     bio: z.string().min(10, "Please provide a brief bio"),
     twitterProfile: z.string().optional().nullable(),
     linkedinProfile: z.string().optional().nullable(), // Made optional
@@ -90,7 +95,6 @@ export const speakerApplicationSchema = z
       .url("Must be a valid URL")
       .optional()
       .nullable(), // Made optional
-    setupRequirements: z.string().optional().nullable(),
     talkTitle: z.string().optional().nullable(),
     talkDescription: z.string().optional().nullable(),
     comfortableWithTopicChange: z.boolean(),
