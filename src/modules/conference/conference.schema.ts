@@ -17,19 +17,22 @@ export const AgeRangeEnum = z.enum([
 ]);
 
 export const RoleDescriptionEnum = z.enum([
-  "STUDENT",
-  "DEVELOPER",
-  "DESIGNER",
-  "ENTREPRENEUR",
-  "WEB3_ENTHUSIAST",
+  "STUDENTS",
+  "WEB_3_ENTHUSIAST",
+  "BLOCKCHAIN_DEVELOPER_ENGINEER",
+  "CORE_PROTOCOL_ENGINEER",
+  "FRONTEND_BACKEND_FULLSTACK_DEVELOPER",
+  "TECHNICAL_WRITER",
+  "RESEARCHERS",
+  "NODE_RUNNERS_AND_OPERATORS",
+  "WEB3_SECURITY_AND_AUDITORS",
+  "GENERAL_BLOCKCHAIN_CRYPTO_ENTHUSIAST",
+  "CONTENT_CREATORS_AND_CONTENT_WRITERS",
+  "UI_UX_AND_CREATIVE_DESIGNERS",
+  "COMMUNITY_SOCIAL_MEDIA_MANAGER",
+  "WEB3_COMMUNITY_LEADER",
+  "CRYPTO_TRADERS_DEGENS",
   "OTHER",
-]);
-
-export const AttendanceTypeEnum = z.enum([
-  "ATTENDEE",
-  "VOLUNTEER",
-  "SPEAKER",
-  "EXHIBITOR",
 ]);
 
 export const BooleanEnum = z.enum(["YES", "NO"]);
@@ -48,26 +51,23 @@ export const conferenceSummitSchema = z.object({
   fullName: z.string().min(3, "Full name is required"),
   email: z.string().email("Invalid email address"),
   whatsappNumber: z.string().min(10, "Valid WhatsApp number is required"),
-  location: z.string().min(3, "Location is required"),
+  country: z.string().min(3, "Country is required"),
+  state: z.string().min(3, "State is required"),
   city: z.string().optional(),
-  age: AgeRangeEnum,
   gender: GenderEnum,
-  preferredDates: z.array(z.string().datetime()),
   social: z.string().url(),
+  walletAddress: z.string().optional(),
 
   // Conference Information (Page 2)
-  roleDescription: RoleDescriptionEnum,
-  expectedGains: z.string().optional().nullable(),
-  attendanceType: AttendanceTypeEnum,
+  roleDescription: z.array(RoleDescriptionEnum),
   certificateNeeded: BooleanEnum,
   openToVolunteer: z.boolean(),
+  willBeLive: z.boolean(),
 
   // Additional Information (Page 2)
-  dietaryAccessibilityNeeds: z.string().optional().nullable(),
   referralSource: z
     .string()
     .min(3, "Please let us know how you heard about us"),
-  joinOnlineCommunity: JoinCommunityOptionEnum,
 });
 
 // Schema for updating registration status
@@ -92,7 +92,6 @@ export const filterRegistrationsSchema = z.object({
 export type Gender = z.infer<typeof GenderEnum>;
 export type AgeRange = z.infer<typeof AgeRangeEnum>;
 export type RoleDescription = z.infer<typeof RoleDescriptionEnum>;
-export type AttendanceType = z.infer<typeof AttendanceTypeEnum>;
 export type JoinCommunityOption = z.infer<typeof JoinCommunityOptionEnum>;
 export type RegistrationStatus = z.infer<typeof RegistrationStatusEnum>;
 export type ConferenceSummitRegistration = z.infer<
