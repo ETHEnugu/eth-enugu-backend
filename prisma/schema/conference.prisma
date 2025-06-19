@@ -16,6 +16,7 @@ model ConferenceSummit {
 
    // Conference Information (Page 2)
    roleDescription   String
+   otherRole         String?
    certificateNeeded StringBoolean
    openToVolunteer   Boolean
    willBeLive        Boolean

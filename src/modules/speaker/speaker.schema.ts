@@ -68,6 +68,8 @@ export const speakerApplicationSchema = z
     gender: GenderEnum,
     whatsappNumber: z.string().min(10, "Valid WhatsApp number is required"),
     country: z.string().min(3, "Location is required"),
+    state: z.string().min(3, "State is required"),
+    city: z.string().optional(),
     bio: z.string().min(10, "Please provide a brief bio"),
     twitterProfile: z.string().optional().nullable(),
     linkedinProfile: z.string().optional().nullable(), // Made optional
@@ -84,11 +86,7 @@ export const speakerApplicationSchema = z
     otherSessionType: z.string().optional(),
     sessionLength: SessionLengthEnum,
     presentationAvailable: z.boolean(),
-    presentationLink: z
-      .string()
-      .url("Must be a valid URL")
-      .optional()
-      .nullable(), // Made optional
+    presentationLink: z.string().optional(),
     setupRequirements: z.string().optional().nullable(),
     talkTitle: z.string().optional().nullable(),
     talkDescription: z.string().optional().nullable(),
