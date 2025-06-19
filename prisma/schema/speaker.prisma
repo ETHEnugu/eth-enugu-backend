@@ -18,7 +18,9 @@ model SpeakerApplication {
   // Roles (relationship to separate table)
   roles     SpeakerRole[]
   otherRole String?
-
+  social    String
+  portfolioUrl    String
+  
   // Participation type
   participationType ParticipationType
 
