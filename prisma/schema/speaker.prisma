@@ -8,16 +8,16 @@ model SpeakerApplication {
   email           String  @unique
   gender          Gender
   whatsappNumber  String
-  country        String
+  country         String
+  state           String
+  city            String?
   bio             String  @db.Text
   twitterProfile  String?
-  linkedinProfile String? // Made optional
-  
+  linkedinProfile String?
+
   // Roles (relationship to separate table)
   roles     SpeakerRole[]
   otherRole String?
-  state     String
-  city      String?
   social    String
   portfolioUrl    String
   
@@ -25,19 +25,20 @@ model SpeakerApplication {
   participationType ParticipationType
 
   // Session Information (Page 2)
-  sessionType                  SessionType
-  otherSessionType            String?
-  sessionLength               SessionLength
-  presentationAvailable       Boolean
-  presentationLink            String? // Made optional
-  talkTitle                   String?
-  talkDescription             String?       @db.Text
-  comfortableWithTopicChange  Boolean
+  sessionType                SessionType
+  otherSessionType           String?
+  sessionLength              SessionLength
+  presentationAvailable      Boolean
+  presentationLink           String?
+  setupRequirements          String?       @db.Text
+  talkTitle                  String?
+  talkDescription            String?       @db.Text
+  comfortableWithTopicChange Boolean
 
   // Travel Information (Page 3)
-  canMakeItToEnugu             Boolean
-  expectedArrivalDates         SpeakerArrivalDate[] // Relationship to separate table
-  
+  canMakeItToEnugu     Boolean
+  expectedArrivalDates SpeakerArrivalDate[] // Relationship to separate table
+
   // Ethereum Research Village
   participateInERV Boolean
   ervInvolvement   ERVInvolvement?
@@ -51,8 +52,8 @@ model SpeakerApplication {
 
 // Separate table for roles (to handle string array)
 model SpeakerRole {
-  id                 String           @id @default(cuid())
-  role               SpeakerRoleType  // Updated to use enum
+  id                 String             @id @default(cuid())
+  role               SpeakerRoleType // Updated to use enum
   speakerApplication SpeakerApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   applicationId      String
 
@@ -61,7 +62,7 @@ model SpeakerRole {
 
 // Separate table for arrival dates (to handle string array)
 model SpeakerArrivalDate {
-  id                 String           @id @default(cuid())
+  id                 String             @id @default(cuid())
   date               DateTime
   speakerApplication SpeakerApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   applicationId      String
@@ -103,8 +104,8 @@ enum SessionType {
 }
 
 enum SessionLength {
-  MINUTES_5    // Added
-  MINUTES_10   // Added
+  MINUTES_5 // Added
+  MINUTES_10 // Added
   MINUTES_15
   MINUTES_30
   MINUTES_45

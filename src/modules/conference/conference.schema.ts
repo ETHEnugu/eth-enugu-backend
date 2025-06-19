@@ -60,6 +60,7 @@ export const conferenceSummitSchema = z.object({
 
   // Conference Information (Page 2)
   roleDescription: z.array(RoleDescriptionEnum),
+  otherRole: z.string().optional(),
   certificateNeeded: BooleanEnum,
   openToVolunteer: z.boolean(),
   willBeLive: z.boolean(),
