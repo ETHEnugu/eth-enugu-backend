@@ -96,10 +96,7 @@ export const speakerApplicationSchema = z
 
     // Travel Information (Page 3)
     canMakeItToEnugu: z.boolean(),
-    expectedArrivalDates: z
-      .array(z.string().datetime())
-      .min(1, "Please provide at least one arrival date"),
-
+    expectedArrivalDates: z.array(z.string().datetime()),
     // Ethereum Research Village
     participateInERV: z.boolean(),
     ervInvolvement: ERVInvolvementEnum.optional(),
@@ -130,19 +127,6 @@ export const speakerApplicationSchema = z
     {
       message: "Please specify session type when selecting 'OTHER'",
       path: ["otherSessionType"],
-    }
-  )
-  .refine(
-    (data) => {
-      // If participateInERV is true, then ervInvolvement is required
-      if (data.participateInERV) {
-        return data.ervInvolvement !== undefined;
-      }
-      return true;
-    },
-    {
-      message: "Please specify how you want to get involved in ERV",
-      path: ["ervInvolvement"],
     }
   );
 
