@@ -44,12 +44,8 @@ export const builderResidencySchema = z.object({
     .url("Must be a valid URL")
     .optional()
     .or(z.literal("")),
-  social: z.string().url("Social profile is required"),
-  portfolioUrl: z
-    .string()
-    .url("Must be a valid URL")
-    .optional()
-    .or(z.literal("")),
+  social: z.string().min(3, "Social profile is required"),
+  portfolioUrl: z.string().optional(),
 
   // Background Information (Page 2)
   primaryRole: z.array(z.string()),
