@@ -6,24 +6,26 @@ CREATE TABLE `Builder` (
     `fullName` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `gender` ENUM('MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY') NOT NULL,
+    `age` ENUM('AGE_16_19', 'AGE_20_24', 'AGE_25_34', 'AGE_35_44', 'AGE_45_PLUS') NOT NULL,
     `whatsappNumber` VARCHAR(191) NOT NULL,
     `country` VARCHAR(191) NOT NULL,
-    `stateOfResidence` VARCHAR(191) NOT NULL,
+    `state` VARCHAR(191) NOT NULL,
+    `city` VARCHAR(191) NULL,
+    `walletAddress` VARCHAR(191) NOT NULL,
     `githubProfile` VARCHAR(191) NULL,
-    `twitterProfile` VARCHAR(191) NOT NULL,
-    `linkedinProfile` VARCHAR(191) NULL,
+    `social` VARCHAR(191) NOT NULL,
     `portfolioUrl` VARCHAR(191) NULL,
     `primaryRole` VARCHAR(191) NOT NULL,
     `otherPrimaryRole` VARCHAR(191) NULL,
     `backgroundAndSkills` TEXT NOT NULL,
     `currentlyBuilding` TEXT NOT NULL,
-    `previousBuilderPrograms` ENUM('YES_BUILDER_RESIDENCY', 'YES_POP_CITY', 'YES_HACKATHON', 'NO') NOT NULL,
+    `previousBuilderPrograms` VARCHAR(191) NOT NULL,
     `hasRegisteredForTheHackathon` BOOLEAN NOT NULL,
     `joinReason` TEXT NOT NULL,
-    `openToCollaboration` BOOLEAN NOT NULL,
     `comfortableSharingAccomodation` BOOLEAN NOT NULL,
     `dietaryAccessibilityNeeds` TEXT NULL,
     `willBeLive` BOOLEAN NOT NULL,
+    `needCertificate` BOOLEAN NOT NULL,
     `referralSource` TEXT NOT NULL,
     `status` ENUM('PENDING', 'APPROVED', 'REJECTED') NOT NULL DEFAULT 'PENDING',
 
@@ -41,31 +43,23 @@ CREATE TABLE `ConferenceSummit` (
     `fullName` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `whatsappNumber` VARCHAR(191) NOT NULL,
-    `location` VARCHAR(191) NOT NULL,
-    `age` ENUM('AGE_16_19', 'AGE_20_24', 'AGE_25_34', 'AGE_35_44', 'AGE_45_PLUS') NOT NULL,
+    `country` VARCHAR(191) NOT NULL,
+    `state` VARCHAR(191) NOT NULL,
+    `city` VARCHAR(191) NULL,
     `gender` ENUM('MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY') NOT NULL,
-    `roleDescription` ENUM('STUDENT', 'DEVELOPER', 'DESIGNER', 'ENTREPRENEUR', 'WEB3_ENTHUSIAST', 'OTHER') NOT NULL,
-    `expectedGains` TEXT NULL,
-    `attendanceType` ENUM('ATTENDEE', 'VOLUNTEER', 'SPEAKER', 'EXHIBITOR') NOT NULL,
+    `social` VARCHAR(191) NOT NULL,
+    `walletAddress` VARCHAR(191) NULL,
+    `roleDescription` VARCHAR(191) NOT NULL,
+    `otherRole` VARCHAR(191) NULL,
     `certificateNeeded` ENUM('YES', 'NO') NOT NULL,
-    `dietaryAccessibilityNeeds` TEXT NULL,
+    `openToVolunteer` BOOLEAN NOT NULL,
+    `willBeLive` BOOLEAN NOT NULL,
     `referralSource` TEXT NOT NULL,
-    `joinOnlineCommunity` ENUM('YES', 'NO', 'ALREADY_MEMBER') NOT NULL,
     `status` ENUM('PENDING', 'APPROVED', 'REJECTED') NOT NULL DEFAULT 'PENDING',
 
     UNIQUE INDEX `ConferenceSummit_email_key`(`email`),
     INDEX `ConferenceSummit_email_idx`(`email`),
     INDEX `ConferenceSummit_status_idx`(`status`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `ConferenceDate` (
-    `id` VARCHAR(191) NOT NULL,
-    `date` DATETIME(3) NOT NULL,
-    `summitId` VARCHAR(191) NOT NULL,
-
-    INDEX `ConferenceDate_summitId_idx`(`summitId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -78,13 +72,19 @@ CREATE TABLE `PopupCity` (
     `email` VARCHAR(191) NOT NULL,
     `gender` ENUM('MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY') NOT NULL,
     `whatsappNumber` VARCHAR(191) NOT NULL,
-    `location` VARCHAR(191) NOT NULL,
-    `currentRole` ENUM('STUDENT', 'DEVELOPER', 'DESIGNER', 'ENTREPRENEUR', 'WEB3_ENTHUSIAST', 'OTHER') NOT NULL,
+    `country` VARCHAR(191) NOT NULL,
+    `state` VARCHAR(191) NOT NULL,
+    `walletAddress` VARCHAR(191) NOT NULL,
+    `role` VARCHAR(191) NOT NULL,
+    `otherRole` VARCHAR(191) NULL,
     `web3Familiarity` ENUM('NEW', 'DABBLED', 'ACTIVELY_BUILDING') NOT NULL,
     `attendDay1` VARCHAR(191) NULL,
     `attendDay2` VARCHAR(191) NULL,
     `freeLunchConsideration` TEXT NULL,
     `volunteeringInterest` ENUM('YES', 'NO', 'MAYBE') NOT NULL,
+    `canAttendIRL` BOOLEAN NOT NULL,
+    `participateInERV` BOOLEAN NOT NULL,
+    `isCertificateNeeded` BOOLEAN NOT NULL,
     `dietaryAccessibilityNeeds` TEXT NULL,
     `referralSource` TEXT NOT NULL,
     `joinOnlineCommunity` ENUM('YES', 'NO', 'ALREADY_MEMBER') NOT NULL,
@@ -93,6 +93,16 @@ CREATE TABLE `PopupCity` (
     UNIQUE INDEX `PopupCity_email_key`(`email`),
     INDEX `PopupCity_email_idx`(`email`),
     INDEX `PopupCity_status_idx`(`status`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `PopCityDate` (
+    `id` VARCHAR(191) NOT NULL,
+    `date` DATETIME(3) NOT NULL,
+    `summitId` VARCHAR(191) NOT NULL,
+
+    INDEX `PopCityDate_summitId_idx`(`summitId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -106,11 +116,14 @@ CREATE TABLE `SpeakerApplication` (
     `gender` ENUM('MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY') NOT NULL,
     `whatsappNumber` VARCHAR(191) NOT NULL,
     `country` VARCHAR(191) NOT NULL,
+    `state` VARCHAR(191) NOT NULL,
+    `city` VARCHAR(191) NULL,
     `bio` TEXT NOT NULL,
     `twitterProfile` VARCHAR(191) NULL,
     `linkedinProfile` VARCHAR(191) NULL,
     `otherRole` VARCHAR(191) NULL,
-    `state` VARCHAR(191) NOT NULL,
+    `social` VARCHAR(191) NOT NULL,
+    `portfolioUrl` VARCHAR(191) NOT NULL,
     `participationType` ENUM('MENTOR_ONLY', 'SPEAK_ONLY', 'BOTH') NOT NULL,
     `sessionType` ENUM('TALK', 'PANEL', 'WORKSHOP', 'FIRESIDE_CHAT', 'OTHER') NOT NULL,
     `otherSessionType` VARCHAR(191) NULL,
@@ -153,7 +166,7 @@ CREATE TABLE `SpeakerArrivalDate` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `ConferenceDate` ADD CONSTRAINT `ConferenceDate_summitId_fkey` FOREIGN KEY (`summitId`) REFERENCES `ConferenceSummit`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `PopCityDate` ADD CONSTRAINT `PopCityDate_summitId_fkey` FOREIGN KEY (`summitId`) REFERENCES `PopupCity`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `SpeakerRole` ADD CONSTRAINT `SpeakerRole_applicationId_fkey` FOREIGN KEY (`applicationId`) REFERENCES `SpeakerApplication`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
