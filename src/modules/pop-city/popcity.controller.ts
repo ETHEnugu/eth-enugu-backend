@@ -16,6 +16,7 @@ import { z } from "zod";
 import { logger } from "../../utils/logger.utils";
 import { SendMail } from "../../utils/mail.util";
 import popup_submission from "../../template/popup_submission";
+import { fromError } from "zod-validation-error";
 
 /**
  * Create a new popup city registration
@@ -69,7 +70,7 @@ export const createPopupRegistration = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
@@ -111,7 +112,7 @@ export const getPopupRegistration = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
@@ -153,7 +154,7 @@ export const getAllPopupRegistrations = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
@@ -196,7 +197,7 @@ export const deletePopupRegistration = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 

@@ -16,6 +16,7 @@ import { z } from "zod";
 import { logger } from "../../utils/logger.utils";
 import { SendMail } from "../../utils/mail.util";
 import br_submission from "../../template/br_submission";
+import { fromError } from "zod-validation-error";
 
 /**
  * Create a new residency application
@@ -63,7 +64,7 @@ export const createBuilderResidency = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
@@ -102,7 +103,7 @@ export const getResidency = async (req: Request, res: Response): Controller => {
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
@@ -143,7 +144,7 @@ export const getAllResidencies = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
@@ -184,7 +185,7 @@ export const deleteResidency = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
