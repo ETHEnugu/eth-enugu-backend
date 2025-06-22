@@ -63,8 +63,8 @@ export const createBuilderResidency = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
-        error: fromError(error).toString().replace("Validation error: ", ""),
+        message: fromError(error).toString().replace("Validation error: ", ""),
+        error: error.errors,
       });
     }
 
@@ -102,8 +102,8 @@ export const getResidency = async (req: Request, res: Response): Controller => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
-        error: fromError(error).toString().replace("Validation error: ", ""),
+        message: fromError(error).toString().replace("Validation error: ", ""),
+        error: error.errors,
       });
     }
 
@@ -143,8 +143,8 @@ export const getAllResidencies = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
-        error: fromError(error).toString().replace("Validation error: ", ""),
+        message: fromError(error).toString().replace("Validation error: ", ""),
+        error: error.errors,
       });
     }
 
@@ -184,8 +184,8 @@ export const deleteResidency = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
-        error: fromError(error).toString().replace("Validation error: ", ""),
+        message: fromError(error).toString().replace("Validation error: ", ""),
+        error: error.errors,
       });
     }
 

@@ -65,8 +65,8 @@ export const createConferenceRegistration = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
-        error: fromError(error).toString().replace("Validation error: ", ""),
+        message: fromError(error).toString().replace("Validation error: ", ""),
+        error: error.errors,
       });
     }
 
@@ -107,8 +107,8 @@ export const getConferenceRegistration = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
-        error: fromError(error).toString().replace("Validation error: ", ""),
+        message: fromError(error).toString().replace("Validation error: ", ""),
+        error: error.errors,
       });
     }
 
@@ -151,8 +151,8 @@ export const getAllConferenceRegistrations = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
-        error: fromError(error).toString().replace("Validation error: ", ""),
+        message: fromError(error).toString().replace("Validation error: ", ""),
+        error: error.errors,
       });
     }
 
@@ -196,8 +196,8 @@ export const deleteConferenceRegistration = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
-        error: fromError(error).toString().replace("Validation error: ", ""),
+        message: fromError(error).toString().replace("Validation error: ", ""),
+        error: error.errors,
       });
     }
 
