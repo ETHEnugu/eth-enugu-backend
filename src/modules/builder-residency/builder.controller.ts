@@ -14,6 +14,8 @@ import {
 import { Controller } from "../../types/index.types";
 import { z } from "zod";
 import { logger } from "../../utils/logger.utils";
+import { SendMail } from "../../utils/mail.util";
+import br_submission from "../../template/br_submission";
 
 /**
  * Create a new residency application
@@ -46,6 +48,12 @@ export const createBuilderResidency = async (
       message: "Residency application submitted successfully",
       data: newResidency,
     };
+
+    SendMail({
+      to: newResidency.email,
+      subject: "Application Received for the ETH Enugu'25 Builder's Residency",
+      html: br_submission(newResidency.fullName),
+    });
 
     return res.status(201).json(response);
   } catch (error) {
