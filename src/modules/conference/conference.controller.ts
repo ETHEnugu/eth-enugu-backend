@@ -16,6 +16,7 @@ import { z } from "zod";
 import { logger } from "../../utils/logger.utils";
 import { SendMail } from "../../utils/mail.util";
 import conference_submission from "../../template/conference_submission";
+import { fromError } from "zod-validation-error";
 
 /**
  * Create a new conference registration
@@ -65,7 +66,7 @@ export const createConferenceRegistration = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
@@ -107,7 +108,7 @@ export const getConferenceRegistration = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
@@ -151,7 +152,7 @@ export const getAllConferenceRegistrations = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
@@ -196,7 +197,7 @@ export const deleteConferenceRegistration = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 

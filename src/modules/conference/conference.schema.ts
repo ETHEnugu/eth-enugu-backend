@@ -55,7 +55,7 @@ export const conferenceSummitSchema = z.object({
   state: z.string().min(3, "State is required"),
   city: z.string().optional(),
   gender: GenderEnum,
-  social: z.string().url(),
+  social: z.string(),
   walletAddress: z.string().optional(),
 
   // Conference Information (Page 2)

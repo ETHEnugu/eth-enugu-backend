@@ -17,6 +17,7 @@ import { logger } from "../../utils/logger.utils";
 import { SendMail } from "../../utils/mail.util";
 import speaker_submission from "../../template/speaker_submission";
 import mentor_submission from "../../template/mentor_submission";
+import { fromError } from "zod-validation-error";
 
 /**
  * Create a new speaker application
@@ -79,7 +80,7 @@ export const createSpeakerApplication = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
@@ -131,7 +132,7 @@ export const getSpeakerApplication = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
@@ -192,7 +193,7 @@ export const getAllSpeakerApplications = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
@@ -235,7 +236,7 @@ export const deleteSpeakerApplication = async (
       return res.status(400).json({
         success: false,
         message: "Invalid request data",
-        error: error.errors,
+        error: fromError(error).toString().replace("Validation error: ", ""),
       });
     }
 
