@@ -15,7 +15,7 @@ import { Controller } from "../../types/index.types";
 import { z } from "zod";
 import { logger } from "../../utils/logger.utils";
 import { SendMail } from "../../utils/mail.util";
-import thankYouForRegistering from "../../template/thank-you-for-registering";
+import conference_submission from "../../template/conference_submission";
 
 /**
  * Create a new conference registration
@@ -53,8 +53,8 @@ export const createConferenceRegistration = async (
 
     SendMail({
       to: newRegistration.email,
-      subject: "Registeration Complete!",
-      html: thankYouForRegistering(newRegistration.fullName?.split(" ")[0]),
+      subject: "Successful Registration for the ETH Enugu Conf/Summit '25",
+      html: conference_submission(newRegistration.fullName),
     });
 
     return res.status(201).json(response);

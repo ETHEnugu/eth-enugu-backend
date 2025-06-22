@@ -14,6 +14,8 @@ import {
 import { Controller } from "../../types/index.types";
 import { z } from "zod";
 import { logger } from "../../utils/logger.utils";
+import { SendMail } from "../../utils/mail.util";
+import popup_submission from "../../template/popup_submission";
 
 /**
  * Create a new popup city registration
@@ -46,6 +48,12 @@ export const createPopupRegistration = async (
       otherData,
       preferredDates || []
     );
+
+    SendMail({
+      to: newRegistration.email,
+      subject: "Application Received for the ETH Enugu '25 Pop-Up City",
+      html: popup_submission(newRegistration.fullName),
+    });
 
     const response = {
       success: true,
