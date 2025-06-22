@@ -16,6 +16,7 @@ import { z } from "zod";
 import { logger } from "../../utils/logger.utils";
 import { SendMail } from "../../utils/mail.util";
 import speaker_submission from "../../template/speaker_submission";
+import mentor_submission from "../../template/mentor_submission";
 
 /**
  * Create a new speaker application
@@ -56,11 +57,19 @@ export const createSpeakerApplication = async (
       data: newApplication,
     };
 
-    SendMail({
-      to: newApplication.email,
-      subject: "Speaker Application Confirmation - ETH Enugu 0'25",
-      html: speaker_submission(newApplication.fullName),
-    });
+    if (newApplication.participationType == "SPEAK_ONLY") {
+      SendMail({
+        to: newApplication.email,
+        subject: "Speaker Application Confirmation - ETH Enugu '25",
+        html: speaker_submission(newApplication.fullName),
+      });
+    } else {
+      SendMail({
+        to: newApplication.email,
+        subject: "Mentor Application Confirmation - ETH Enugu '25",
+        html: mentor_submission(newApplication.fullName),
+      });
+    }
 
     return res.status(201).json(response);
   } catch (error) {
