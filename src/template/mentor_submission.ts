@@ -64,7 +64,8 @@ export default function (fullName: string) {
                       Thank you for applying to mentor at the<!-- -->
                       <span style="font-weight:bold"
                         >ETH Enugu Conf/Summit &#x27;25</span
-                      >taking place from<!-- -->
+                      >
+                      <!-- -->taking place from<!-- -->
                       <span style="font-weight:bold"
                         >August 4th - 16th, 2025</span
                       >. We&#x27;re excited to confirm receipt of your
@@ -73,7 +74,7 @@ export default function (fullName: string) {
                     </p>
                     <p
                       style="font-size:1.2rem;line-height:1.5;margin-bottom:20px;margin-top:16px">
-                      Our organizing team is currently reviewing all speaker
+                      Our organizing team is currently reviewing all mentor
                       submissions to curate a diverse, engaging, and
                       mission-aligned lineup. Your application is under
                       evaluation, and we&#x27;ll follow up with a decision in

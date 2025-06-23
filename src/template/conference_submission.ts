@@ -66,12 +66,12 @@ export default function (fullName: string) {
                       of builders, researchers, and creators shaping the future
                       of Ethereum in Africa.
                     </p>
-                    <a
+                    <br /><br /><a
                       href="https://ethenugu.xyz/generate-dp"
                       style="color:white;text-decoration-line:none;font-size:1.1rem;background-color:#006C00;padding:9px 12px 6px;border-radius:20px;white-space:nowrap;filter:drop-shadow(3px 3px black)"
                       target="_blank"
                       >Click here to generate your DP</a
-                    ><br />
+                    ><br /><br />
                     <table
                       align="center"
                       width="100%"
@@ -79,16 +79,16 @@ export default function (fullName: string) {
                       cellpadding="0"
                       cellspacing="0"
                       role="presentation"
-                      style="text-align:center;margin-bottom:30px">
+                      style="text-align:left;margin:20px 0 20px">
                       <tbody>
                         <tr>
                           <td>
                             <p
-                              style="font-size:1.3rem;line-height:24px;font-weight:bold;margin-top:16px;margin-bottom:16px">
+                              style="font-size:1.3rem;line-height:24px;font-weight:bold;width:100%;text-align:left;margin-top:16px;margin-bottom:16px">
                               Conference/Summit details:
                             </p>
                             <p
-                              style="font-size:14px;line-height:24px;margin-top:16px;margin-bottom:16px">
+                              style="font-size:1.2rem;line-height:24px;text-align:left;margin-top:16px;margin-bottom:16px">
                               Date: 16th August, 2025.<br />Time : 10AM WAT<br />Venue:
                               Enugu (specific location to be shared soon)
                             </p>
@@ -147,7 +147,7 @@ export default function (fullName: string) {
                         <tr>
                           <td>
                             <p
-                              style="font-size:1.3rem;line-height:24px;font-weight:bold;margin-top:16px;margin-bottom:16px">
+                              style="font-size:1.3rem;line-height:24px;font-weight:bold;width:100%;text-align:left;margin-top:16px;margin-bottom:16px">
                               Here&#x27;s what to expect at ETH Enugu 2025 and
                               other things you can be part of:
                             </p>

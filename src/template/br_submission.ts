@@ -3,7 +3,7 @@ export default function (fullName: string) {
   const name = oldName ? ` ${oldName}` : "";
 
   return `
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--$-->
 <html dir="ltr" lang="en">
   <head>
@@ -61,16 +61,16 @@ export default function (fullName: string) {
                     </p>
                     <p
                       style="font-size:1.2rem;line-height:1.5;margin-bottom:20px;margin-top:16px">
-                      Thank you for applying for the ETH Enugu Builder's
+                      Thank you for applying for the ETH Enugu Builder‘s
                       Residency. We are delighted to acknowledge your interest
                       in joining our program.
                     </p>
-                    <a
+                    <br /><a
                       href="https://ethenugu.xyz/generate-dp"
                       style="color:white;text-decoration-line:none;font-size:1.1rem;background-color:#006C00;padding:9px 12px 6px;border-radius:20px;white-space:nowrap;filter:drop-shadow(3px 3px black)"
                       target="_blank"
                       >Click here to generate your DP</a
-                    >
+                    ><br /><br />
                     <p
                       style="font-size:1.2rem;line-height:1.5;margin-bottom:20px;margin-top:16px">
                       Please be informed that our selection committee is
@@ -93,7 +93,7 @@ export default function (fullName: string) {
                         <tr>
                           <td>
                             <p
-                              style="font-size:1.3rem;line-height:24px;font-weight:bold;margin-top:16px;margin-bottom:16px">
+                              style="font-size:1.3rem;line-height:24px;font-weight:bold;width:100%;text-align:left;margin-top:16px;margin-bottom:16px">
                               Builder residency house sneak peak:
                             </p>
                             <img
@@ -118,7 +118,7 @@ export default function (fullName: string) {
                         <tr>
                           <td>
                             <p
-                              style="font-size:1.3rem;line-height:24px;font-weight:bold;margin-top:16px;margin-bottom:16px">
+                              style="font-size:1.3rem;line-height:24px;font-weight:bold;width:100%;text-align:left;margin-top:16px;margin-bottom:16px">
                               Here&#x27;s what to expect at ETH Enugu 2025 and
                               other things you can be part of:
                             </p>
