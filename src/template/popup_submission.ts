@@ -107,8 +107,8 @@ export default function (fullName: string) {
                                 <tr style="width:100%">
                                   <td data-id="__react-email-column">
                                     <img
-                                      title="Builder Residency House Sneak Peak"
-                                      alt="Builder Residency House Sneak Peak"
+                                      title="Pop Up House Sneak Peak"
+                                      alt="Pop Up House Sneak Peak"
                                       height="200"
                                       src="https://asset.ethenugu.xyz/PopUpCitySneakPeak1.jpg"
                                       style="display:block;outline:none;border:none;text-decoration:none;margin:0 auto"
@@ -116,8 +116,8 @@ export default function (fullName: string) {
                                   </td>
                                   <td data-id="__react-email-column">
                                     <img
-                                      title="Builder Residency House Sneak Peak"
-                                      alt="Builder Residency House Sneak Peak"
+                                      title="Pop Up House Sneak Peak"
+                                      alt="Pop Up House Sneak Peak"
                                       height="200"
                                       src="https://asset.ethenugu.xyz/PopUpCitySneakPeak2.jpg"
                                       style="display:block;outline:none;border:none;text-decoration:none;margin:0 auto"
