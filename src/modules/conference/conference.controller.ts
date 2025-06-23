@@ -15,7 +15,8 @@ import { Controller } from "../../types/index.types";
 import { z } from "zod";
 import { logger } from "../../utils/logger.utils";
 import { SendMail } from "../../utils/mail.util";
-import thankYouForRegistering from "../../template/thank-you-for-registering";
+import conference_submission from "../../template/conference_submission";
+import { fromError } from "zod-validation-error";
 
 /**
  * Create a new conference registration
@@ -53,8 +54,8 @@ export const createConferenceRegistration = async (
 
     SendMail({
       to: newRegistration.email,
-      subject: "Registeration Complete!",
-      html: thankYouForRegistering(newRegistration.fullName?.split(" ")[0]),
+      subject: "Successful Registration for the ETH Enugu Conf/Summit '25",
+      html: conference_submission(newRegistration.fullName),
     });
 
     return res.status(201).json(response);
@@ -64,7 +65,7 @@ export const createConferenceRegistration = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }
@@ -106,7 +107,7 @@ export const getConferenceRegistration = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }
@@ -150,7 +151,7 @@ export const getAllConferenceRegistrations = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }
@@ -195,7 +196,7 @@ export const deleteConferenceRegistration = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }

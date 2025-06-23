@@ -14,6 +14,10 @@ import {
 import { Controller } from "../../types/index.types";
 import { z } from "zod";
 import { logger } from "../../utils/logger.utils";
+import { SendMail } from "../../utils/mail.util";
+import speaker_submission from "../../template/speaker_submission";
+import mentor_submission from "../../template/mentor_submission";
+import { fromError } from "zod-validation-error";
 
 /**
  * Create a new speaker application
@@ -54,6 +58,20 @@ export const createSpeakerApplication = async (
       data: newApplication,
     };
 
+    if (newApplication.participationType == "SPEAK_ONLY") {
+      SendMail({
+        to: newApplication.email,
+        subject: "Speaker Application Confirmation - ETH Enugu '25",
+        html: speaker_submission(newApplication.fullName),
+      });
+    } else {
+      SendMail({
+        to: newApplication.email,
+        subject: "Mentor Application Confirmation - ETH Enugu '25",
+        html: mentor_submission(newApplication.fullName),
+      });
+    }
+
     return res.status(201).json(response);
   } catch (error) {
     logger.error("Failed to create speaker application:", error);
@@ -61,7 +79,7 @@ export const createSpeakerApplication = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }
@@ -113,7 +131,7 @@ export const getSpeakerApplication = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }
@@ -174,7 +192,7 @@ export const getAllSpeakerApplications = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }
@@ -217,7 +235,7 @@ export const deleteSpeakerApplication = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }

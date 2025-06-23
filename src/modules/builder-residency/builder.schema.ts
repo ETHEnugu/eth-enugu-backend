@@ -39,11 +39,7 @@ export const builderResidencySchema = z.object({
   state: z.string().min(3, "State of residence is required"),
   city: z.string().optional(),
   walletAddress: z.string(),
-  githubProfile: z
-    .string()
-    .url("Must be a valid URL")
-    .optional()
-    .or(z.literal("")),
+  githubProfile: z.string().optional().or(z.literal("")),
   social: z.string().min(3, "Social profile is required"),
   portfolioUrl: z.string().optional(),
 

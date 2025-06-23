@@ -14,6 +14,9 @@ import {
 import { Controller } from "../../types/index.types";
 import { z } from "zod";
 import { logger } from "../../utils/logger.utils";
+import { SendMail } from "../../utils/mail.util";
+import popup_submission from "../../template/popup_submission";
+import { fromError } from "zod-validation-error";
 
 /**
  * Create a new popup city registration
@@ -47,6 +50,12 @@ export const createPopupRegistration = async (
       preferredDates || []
     );
 
+    SendMail({
+      to: newRegistration.email,
+      subject: "Application Received for the ETH Enugu '25 Pop-Up City",
+      html: popup_submission(newRegistration.fullName),
+    });
+
     const response = {
       success: true,
       message: "Your Pop-Up City registration was submitted successfully",
@@ -60,7 +69,7 @@ export const createPopupRegistration = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }
@@ -102,7 +111,7 @@ export const getPopupRegistration = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }
@@ -144,7 +153,7 @@ export const getAllPopupRegistrations = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }
@@ -187,7 +196,7 @@ export const deletePopupRegistration = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }

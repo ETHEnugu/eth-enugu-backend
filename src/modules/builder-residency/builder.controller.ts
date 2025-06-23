@@ -14,6 +14,9 @@ import {
 import { Controller } from "../../types/index.types";
 import { z } from "zod";
 import { logger } from "../../utils/logger.utils";
+import { SendMail } from "../../utils/mail.util";
+import br_submission from "../../template/br_submission";
+import { fromError } from "zod-validation-error";
 
 /**
  * Create a new residency application
@@ -47,6 +50,12 @@ export const createBuilderResidency = async (
       data: newResidency,
     };
 
+    SendMail({
+      to: newResidency.email,
+      subject: "Application Received for the ETH Enugu'25 Builder's Residency",
+      html: br_submission(newResidency.fullName),
+    });
+
     return res.status(201).json(response);
   } catch (error) {
     logger.error("Failed to create builder residency:", error);
@@ -54,7 +63,7 @@ export const createBuilderResidency = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }
@@ -93,7 +102,7 @@ export const getResidency = async (req: Request, res: Response): Controller => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }
@@ -134,7 +143,7 @@ export const getAllResidencies = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }
@@ -175,7 +184,7 @@ export const deleteResidency = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request data",
+        message: fromError(error).toString().replace("Validation error: ", ""),
         error: error.errors,
       });
     }

@@ -23,7 +23,8 @@
     "pino": "^9.6.0",
     "sharp": "^0.34.1",
     "text-to-svg": "^3.1.5",
-    "zod": "^3.24.4"
+    "zod": "^3.24.4",
+    "zod-validation-error": "^3.5.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
