@@ -93,7 +93,7 @@ export default function (fullName: string) {
                         <tr>
                           <td>
                             <p
-                              style="font-size:1.3rem;line-height:24px;font-weight:bold;margin-top:16px;margin-bottom:16px">
+                              style="font-size:1.3rem;line-height:24px;font-weight:bold;width:100%;text-align:left;margin-top:16px;margin-bottom:16px">
                               Pop-up City Coworking space sneak peak:
                             </p>
                             <table
@@ -141,7 +141,7 @@ export default function (fullName: string) {
                         <tr>
                           <td>
                             <p
-                              style="font-size:1.3rem;line-height:24px;font-weight:bold;margin-top:16px;margin-bottom:16px">
+                              style="font-size:1.3rem;line-height:24px;font-weight:bold;width:100%;text-align:left;margin-top:16px;margin-bottom:16px">
                               Here&#x27;s what to expect at ETH Enugu 2025 and
                               other things you can be part of:
                             </p>
