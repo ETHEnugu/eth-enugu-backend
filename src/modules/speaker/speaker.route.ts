@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
-  // getSpeakerApplication,
-  // getAllSpeakerApplications,
+  getSpeakerApplication,
+  getAllSpeakerApplications,
   createSpeakerApplication,
 } from "./speaker.controller";
 
@@ -11,7 +11,7 @@ const speakerRouter = Router();
 speakerRouter.post("/", createSpeakerApplication);
 
 // Protected routes (require authentication)
-// speakerRouter.get("/:id", getSpeakerApplication);
-// speakerRouter.get("/", getAllSpeakerApplications);
+speakerRouter.get("/:id", getSpeakerApplication);
+speakerRouter.get("/", getAllSpeakerApplications);
 
 export default speakerRouter;

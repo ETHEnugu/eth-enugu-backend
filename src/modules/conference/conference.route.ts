@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
-  // getConferenceRegistration,
-  // getAllConferenceRegistrations,
+  getConferenceRegistration,
+  getAllConferenceRegistrations,
   createConferenceRegistration,
-  // deleteConferenceRegistration,
+  deleteConferenceRegistration,
 } from "./conference.controller";
 
 const conferenceSummitRouter = Router();
@@ -12,11 +12,11 @@ const conferenceSummitRouter = Router();
 conferenceSummitRouter.post("/", createConferenceRegistration);
 
 // Protected routes (require authentication)
-// conferenceSummitRouter.get("/:id", getConferenceRegistration);
-// conferenceSummitRouter.get("/", getAllConferenceRegistrations);
+conferenceSummitRouter.get("/:id", getConferenceRegistration);
+conferenceSummitRouter.get("/", getAllConferenceRegistrations);
 
 // Admin-only routes
 
-// conferenceSummitRouter.delete("/:id", deleteConferenceRegistration);
+conferenceSummitRouter.delete("/:id", deleteConferenceRegistration);
 
 export default conferenceSummitRouter;
