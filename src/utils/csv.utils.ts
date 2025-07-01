@@ -1,6 +1,6 @@
 import { AsyncParser, ParserOptions } from "@json2csv/node";
 
-export const TargetEmailForCSV = "hello@onfranciis.dev";
+export const TargetEmailForCSV = "EthEnugu@gmail.com";
 
 export const CSVParser = async (
   data: unknown[],
