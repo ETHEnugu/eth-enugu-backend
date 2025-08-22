@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import {
   errorHandler,
   notFoundHandler,
+  temporarilyDisabled,
 } from "./middlewares/error-handler.middleware";
 import router from "./modules/index.routes";
 import { corsMiddleware } from "./middlewares/cors.middleware";
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use(router);
 
+app.use(temporarilyDisabled);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
