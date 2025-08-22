@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { envConfig } from "../config";
 
 export class ApiError extends Error {
   statusCode: number;
@@ -21,6 +22,15 @@ export const notFoundHandler = (
   next(error);
 };
 
+export const temporarilyDisabled = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const error = new ApiError(540, `This has temporarily been disabled!`);
+  next(error);
+};
+
 // Global error handler middleware
 export const errorHandler = (
   err: ApiError | Error,
@@ -40,7 +50,7 @@ export const errorHandler = (
   const responseBody = {
     status: "error",
     message,
-    stack: err.stack,
+    stack: envConfig.MODE == "production" ? undefined : err.stack,
     isOperational,
   };
 
